@@ -1,5 +1,6 @@
 {
     "versionCode": 103000,
+    "versionName": "1.3.0",
     "updateDate": "2023-08-11",
     "change": "-更新内容测试",
     "spinner": "display: none !important;"
