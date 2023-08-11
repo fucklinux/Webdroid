@@ -1,0 +1,562 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>Launcher</title>
+    <style>
+        body {
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+        }
+
+        #statusBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 24px;
+            background: rgba(0, 0, 0, .2);
+            transform: translateY(-24px);
+            transition: .4s;
+        }
+
+        #dockBar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 128px;
+        }
+
+        #navBar {
+            text-align: center;
+            height: 48px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            color: #fff;
+            font-size: 48px;
+            transform: translateY(48px);
+            transition: .3s;
+            z-index: 9999;
+        }
+
+        .navButton {
+            height: 48px;
+            width: 30%;
+            border-radius: 48px;
+            display: inline-block;
+            max-width: 100px;
+        }
+
+        .navButton img {
+            width: 24px;
+            height: 24px;
+            transform: translateY(-7px);
+        }
+
+        .icon {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .icon-dock {
+            margin-top: 8px;
+            width: 64px;
+            height: 64px;
+        }
+
+        .icon img {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            transition: .4s;
+            transform: scale(.9);
+        }
+
+        .icon img:hover {
+            filter: brightness(1.5);
+        }
+
+        .icon p {
+            color: #fff;
+            margin: 0;
+            text-shadow: 0 0 2px #000;
+            font-size: 13px;
+        }
+
+        #iframe {
+            border: none;
+            position: fixed;
+            top: 28px;
+            width: 100%;
+            height: calc(100% - 76px);
+            transform: translateY(calc(100% + 48px));
+            transition: .4s;
+            z-index: 9998;
+            background: #fff;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 96px;
+            background: rgba(0, 0, 0, .8);
+            color: #fff;
+            padding: 16px;
+            border-radius: 32px;
+            animation-name: toast;
+            animation-duration: 5s;
+            z-index: -1;
+            opacity: 0;
+            max-width: 256px;
+        }
+
+        @keyframes toast {
+            0% {
+                z-index: 10000;
+            }
+
+            5% {
+                z-index: 10000;
+                opacity: 1;
+            }
+
+            95% {
+                z-index: 10000;
+                opacity: 1;
+            }
+
+            99.99% {
+                z-index: 10000;
+            }
+
+            100% {}
+        }
+
+        #cover {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10001;
+            pointer-events: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 0;
+            animation-name: notification;
+            animation-duration: 7s;
+            z-index: 10000;
+            width: 95%;
+            transform: translateY(-150%);
+            padding-top: 8px;
+            background: #fff;
+            max-width: 512px;
+        }
+
+        .notification:hover {
+            background-color: #EBEBEB;
+        }
+
+        @keyframes notification {
+            0% {}
+
+            5% {
+                transform: translateY(0);
+            }
+
+            95% {
+                transform: translateY(0);
+            }
+
+            100% {}
+        }
+
+        .mdui-theme-layout-dark .notification {
+            background: #303030;
+            color: #fff;
+        }
+
+        .mdui-theme-layout-dark .notification:hover {
+            background: #404040;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="customHTMLDiv"></div>
+    <div id="cover"></div>
+    <div id="statusBar" style="color: #fff;padding-top: 4px;">
+        <div style="float: right;">
+            <i class="mdui-icon material-icons" style="font-size: 18px;" id="WLANIcon">network_wifi</i>
+            <i class="mdui-icon material-icons" style="display: inline-block;font-size: 18px;">network_cell</i>
+            <i class="mdui-icon material-icons" style="display: inline-block;font-size: 18px;" id="batteryIcon"></i>
+            <div id="batteryLevel" style="transform: translateY(2px);"></div>
+            <div id="time" style="margin: 0 16px;display: inline-block;transform: translateY(2px);"></div>
+        </div>
+    </div>
+    <div id="dockBar">
+        <div class="mdui-container" style="margin-left: 16px;margin-right: 16px;width: calc(100% - 32px);">
+            <div class="mdui-row-xs-4">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('http://www.bing.com/', '#000', '#000', '#fff', '#fff');">
+                    <img src="images/bing.png">
+                </div>
+            </div>
+        </div>
+        <div id="navBar">
+            <div class="mdui-ripple mdui-ripple-white navButton" id="navBack">
+                <img src="images/ic_sysbar_back.png">
+            </div>
+            <div class="mdui-ripple mdui-ripple-white navButton" id="navHome">
+                <img src="images/ic_sysbar_home.png">
+            </div>
+        </div>
+    </div>
+    <div class="mdui-container" style="margin-top: 28px;margin-left: 16px;margin-right: 16px;width: calc(100% - 32px);">
+        <div class="mdui-row-xs-4">
+            <div class="mdui-col icon" onclick="javascript:launchApp('settings.html', '#455A64', '#000', '#fff', '#fff');">
+                <img src="images/ic_launcher_settings.png">
+                <p>设置</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
+                <img src="images/bing.png">
+                <p>Bing</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bgtool.tk/', '#ECEFF1', '#000', '#000', '#fff');">
+                <img src="images/BGTool.jpg">
+                <p>BGTool</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://music.163.com/', '#D43C33', '#000', '#fff', '#fff');">
+                <img src="images/netEaseMusic.png">
+                <p>网易云音乐</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bilibili.com/', '#FB7299', '#000', '#fff', '#fff');">
+                <img src="images/bilibili.png">
+                <p>哔哩哔哩</p>
+            </div>
+        </div>
+    </div>
+    <iframe id="iframe"></iframe>
+    <script>
+        //设置应用打开状态
+        opened = 0;
+        //函数：通过 ID 获取元素
+        function gebi(id) {
+            return document.getElementById(id);
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            //延时执行：显示状态栏与导航栏
+            window.setTimeout(function() {
+                gebi("statusBar").style.transform = "translateY(0)";
+                gebi("navBar").style.transform = "translateY(0)";
+            }, 500);
+            //重复执行：
+            window.setInterval(function() {
+                //刷新时间
+                var d = new Date();
+                var h = d.getHours().toString().padStart(2, '0');
+                var m = d.getMinutes().toString().padStart(2, '0');
+                if (localStorage.getItem("displaySeconds") == 1) {
+                    var s = d.getSeconds().toString().padStart(2, '0');
+                    gebi("time").innerText = h + ":" + m + ":" + s;
+                } else {
+                    gebi("time").innerText = h + ":" + m;
+                }
+                //刷新深色主题
+                if (localStorage.getItem("darkTheme") == "true") {
+                    gebi("iframe").style.background = "#303030";
+                    document.body.classList.add("mdui-theme-layout-dark");
+                } else {
+                    gebi("iframe").style.background = "#fff";
+                    document.body.classList.remove("mdui-theme-layout-dark");
+                }
+            }, 100);
+            //获取设置数据与基本信息
+            getBatteryInfo();
+            getBrightness();
+            getWallpaper();
+            getDockBarInfo();
+            getCustomHTML();
+            if (localStorage.getItem("updateNotification") == 1) {
+                checkUpdate();
+            }
+            if (navigator.onLine) {
+                gebi("WLANIcon").style.display = "inline-block";
+            } else {
+                gebi("WLANIcon").style.display = "none";
+                notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">signal_wifi_off</i>`, "网络连接已断开", "当前处于离线状态", `function() {
+                    alert("联网功能暂不可用。\\n请检查您的网络连接。");
+                }`);
+            }
+        };
+        //函数：启动应用
+        function launchApp(url, color1, color2, textColor1, textColor2) {
+            gebi("iframe").style.transform = "translateY(0)";
+            window.setTimeout(function() {
+                gebi("iframe").src = url;
+            }, 400);
+            gebi("statusBar").style.background = color1;
+            gebi("navBar").style.background = color2;
+            gebi("statusBar").style.color = textColor1;
+            gebi("navBar").style.color = textColor2;
+            opened = 1;
+        }
+        //事件：主页键被点击
+        gebi("navHome").onclick = function() {
+            gebi("iframe").style.transform = "translateY(calc(100% + 48px))";
+            window.setTimeout(function() {
+                gebi("iframe").src = "about:blank";
+            }, 400);
+            gebi("statusBar").style.background = "";
+            gebi("navBar").style.background = "";
+            gebi("statusBar").style.color = "#fff";
+            gebi("navBar").style.color = "";
+            document.title = "Launcher";
+            opened = 0;
+        };
+        //事件：返回键被点击
+        gebi("navBack").onclick = function() {
+            if (opened == 1) {
+                gebi("iframe").contentWindow.history.back();
+            }
+        };
+        //事件：iframe 加载完成
+        gebi("iframe").onload = function() {
+            if (this.contentWindow.document.title != "") {
+                document.title = this.contentWindow.document.title;
+            }
+        };
+        //函数：发送 Toast
+        function toast(message) {
+            //若已有 Toast 在显示，则将它们隐藏
+            for (i = 0; i < document.getElementsByClassName("toast").length; i++) {
+                document.getElementsByClassName("toast")[i].style.display = "none";
+            }
+            //创建 Toast 元素并显示
+            var toastDiv = document.createElement("div");
+            toastDiv.innerText = message;
+            toastDiv.classList.add("toast");
+            document.body.appendChild(toastDiv);
+            //将所有 Toast 居中显示
+            for (i = 0; i < document.getElementsByClassName("toast").length; i++) {
+                document.getElementsByClassName("toast")[i].style.left = "calc(50% - " + Number(document.getElementsByClassName("toast")[i].clientWidth / 2) + "px)";
+            }
+            //延时执行：隐藏 Toast 元素
+            window.setTimeout(function() {
+                document.body.removeChild(toastDiv);
+            }, 5000);
+        }
+        //函数：发送通知，实现方法与 Toast 类似
+        function notice(icon, title, content, clickFunc) {
+            for (i = 0; i < document.getElementsByClassName("notification").length; i++) {
+                document.getElementsByClassName("notification")[i].style.display = "none";
+            }
+            var notificationDiv = document.createElement("li");
+            notificationDiv.innerHTML = icon + `<div class="mdui-list-item-content">
+            <div class="mdui-list-item-title">` + title + `</div>
+            <div class="mdui-list-item-text">` + content + `</div>
+            </div>`;
+            notificationDiv.classList.add("notification", "mdui-shadow-9", "mdui-ripple", "mdui-list-item");
+            //设置通知回调
+            notificationDiv.onclick = function() {
+                eval('(' + clickFunc + ')();');
+                for (i = 0; i < document.getElementsByClassName("notification").length; i++) {
+                    document.getElementsByClassName("notification")[i].style.display = "none";
+                }
+            };
+            document.body.appendChild(notificationDiv);
+            for (i = 0; i < document.getElementsByClassName("notification").length; i++) {
+                document.getElementsByClassName("notification")[i].style.left = "calc(50% - " + Number(document.getElementsByClassName("notification")[i].clientWidth / 2) + "px)";
+            }
+            window.setTimeout(function() {
+                document.body.removeChild(notificationDiv);
+            }, 7000);
+        }
+        //事件：收到来自其他页面的消息
+        window.addEventListener("message", function(e) {
+            if (e.data == "") return;
+            var getData = JSON.parse(e.data);
+            //API：发送 Toast
+            if (getData.type == "toast") {
+                toast(getData.message);
+            }
+            //API：发送通知
+            if (getData.type == "notification") {
+                notice(getData.icon, getData.title, getData.content, getData.clickFunc);
+            }
+            //API：执行 JavaScript 脚本
+            if (getData.type == "JavaScript") {
+                eval('(' + getData.script + ')();');
+            }
+            //API：应用跳转
+            if (getData.type == "jumpApp") {
+                launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+            }
+        }, false);
+        //事件：屏幕方向改变
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function() {
+            /*隐藏所有通知
+            经过测试，如果这里对通知重新进行定位，在某些设备上就会表现异常
+            有时间我会寻找其他方法来代替*/
+            for (i = 0; i < document.getElementsByClassName("notification").length; i++) {
+                document.getElementsByClassName("notification")[i].style.display = "none";
+            }
+        }, false);
+        //自动处理某些设置项
+        if (!localStorage.getItem("displaySeconds")) {
+            localStorage.setItem("displaySeconds", 0);
+        }
+        if (!localStorage.getItem("brightness")) {
+            localStorage.setItem("brightness", 1);
+        }
+        if (!localStorage.getItem("displayBatteryLevel")) {
+            localStorage.setItem("displayBatteryLevel", 1);
+        }
+        if (!localStorage.getItem("wallpaper")) {
+            localStorage.setItem("wallpaper", "images/default_wallpaper.png");
+        }
+        if (!localStorage.getItem("transparentDockBar")) {
+            localStorage.setItem("transparentDockBar", 0);
+        }
+        if (!localStorage.getItem("customHTML")) {
+            localStorage.setItem("customHTML", "");
+        }
+        if (!localStorage.getItem("updateNotification")) {
+            localStorage.setItem("updateNotification", 1);
+        }
+        //设置是否已提示“电池电量不足”
+        batteryAlerted = 0;
+        //函数：获取电池信息
+        function getBatteryInfo() {
+            navigator.getBattery().then(function(battery) {
+                if (battery.charging) {
+                    //情况 1：正在充电
+                    gebi("batteryIcon").innerText = "battery_charging_full";
+                    gebi("batteryIcon").classList.remove("mdui-text-color-red");
+                    batteryAlerted = 0;
+                } else {
+                    if (battery.level <= 0.2) {
+                        //情况 2：未在充电且电池电量不高于 20%
+                        gebi("batteryIcon").innerText = "battery_alert";
+                        gebi("batteryIcon").classList.add("mdui-text-color-red");
+                        if (batteryAlerted == 0) {
+                            notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">battery_alert</i>`, "电池电量不足", "仅剩 " + (battery.level * 100) + "%", `function() {
+                                alert("电池电量不高于 20% 时会发送此通知。\\n请及时进行充电。");}`);
+                            batteryAlerted = 1;
+                        }
+                    } else {
+                        //情况 3：未在充电且电池电量高于 20%
+                        gebi("batteryIcon").innerText = "battery_full";
+                        gebi("batteryIcon").classList.remove("mdui-text-color-red");
+                        batteryAlerted = 0;
+                    }
+                }
+                //确定是否显示电池电量
+                if (localStorage.getItem("displayBatteryLevel") == 1) {
+                    gebi("batteryLevel").style.display = "inline-block";
+                    gebi("batteryLevel").innerText = (battery.level * 100).toFixed(0) + "%";
+                } else {
+                    gebi("batteryLevel").style.display = "none";
+                }
+            });
+        }
+        //事件：电池信息改变
+        navigator.getBattery().then(function(battery) {
+            battery.onlevelchange = function() {
+                getBatteryInfo();
+            };
+            battery.onchargingchange = function() {
+                getBatteryInfo();
+            };
+        });
+        //获取并设置屏幕亮度
+        function getBrightness() {
+            gebi("cover").style.background = "rgba(0, 0, 0, " + (1 - localStorage.getItem("brightness")) + ")";
+        }
+        //事件：网络状态改变
+        window.addEventListener("offline", function() {
+            gebi("WLANIcon").style.display = "none";
+            notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">signal_wifi_off</i>`, "网络连接已断开", "当前处于离线状态", `function() {
+                alert("联网功能暂不可用。\\n请检查您的网络连接。");
+            }`);
+        });
+        window.addEventListener("online", function() {
+            gebi("WLANIcon").style.display = "inline-block";
+            notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">network_wifi</i>`, "网络已连接", "已恢复在线状态", `function() {
+                alert("联网功能可正常使用。");
+            }`);
+        });
+        //获取并设置壁纸
+        function getWallpaper() {
+            document.body.style.backgroundImage = "url(" + localStorage.getItem("wallpaper") + ")";
+        }
+        //函数：获取 Dock 栏设置
+        function getDockBarInfo() {
+            if (localStorage.getItem("transparentDockBar") == 1) {
+                gebi("dockBar").style.background = "";
+            } else {
+                gebi("dockBar").style.background = "rgba(255, 255, 255, .2)";
+            }
+        }
+        /*全屏显示与退出全屏
+        本源码来自：https://www.php.cn/article/397034.html */
+        function requestFullScreen(element) {
+            //判断各种浏览器，找到正确的方法
+            var requestMethod = element.requestFullScreen || //W3C
+                element.webkitRequestFullScreen || //Chrome等
+                element.mozRequestFullScreen || //FireFox
+                element.msRequestFullScreen; //IE11
+            if (requestMethod) {
+                requestMethod.call(element);
+            } else if (typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+
+        function exitFull() {
+            //判断各种浏览器，找到正确的方法
+            var exitMethod = document.exitFullscreen || //W3C
+                document.mozCancelFullScreen || //Chrome等
+                document.webkitExitFullscreen || //FireFox
+                document.webkitExitFullscreen; //IE11
+            if (exitMethod) {
+                exitMethod.call(document);
+            } else if (typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+        //函数：获取自定义 HTML 代码
+        function getCustomHTML() {
+            gebi("customHTMLDiv").innerHTML = localStorage.getItem("customHTML");
+        }
+        //函数：处理更新数据
+        function processUpdate() {
+            //判断是否为最新版本
+            if (versionCode < updateData.versionCode) {
+                notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">system_update</i>`, "有可用都系统更新", updateData.versionName + "版本已发布", function() {
+                    launchApp("update.html", "#1976D2", "#000", "#fff", "#fff");
+                });
+            }
+        }
+    </script>
+    <script src="update.js"></script>
+</body>
+
+</html>

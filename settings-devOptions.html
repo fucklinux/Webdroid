@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>开发者选项</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings.html');">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">开发者选项</a>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-center" style="max-width: 640px;">
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:stopDevMode();">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">禁用开发者选项</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">系统更新通知</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:updateNotification();" id="updateNotification" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:postToast('这是一条测试 Toast');">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">发送测试 Toast</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:sendTestNotification();">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">发送测试通知</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" mdui-dialog="{target: '#customHTML'}">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">自定义 HTML 代码</div>
+            </div>
+        </li>
+    </ul>
+    <div class="mdui-dialog" id="customHTML">
+        <div class="mdui-dialog-title">自定义 HTML 代码</div>
+        <div class="mdui-dialog-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">HTML</label>
+                <textarea class="mdui-textfield-input" type="text" id="HTMLInput"></textarea>
+                <div class="mdui-textfield-helper">自定义 HTML 代码将显示在主屏幕</div>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple" onclick="javascript:setCustomHTML();" mdui-dialog-close>确认</button>
+        </div>
+    </div>
+    <script>
+        //函数：页面跳转
+        function openPage(url) {
+            document.documentElement.style.transform = "translateX(-50%)";
+            document.documentElement.style.opacity = 0;
+            window.setTimeout(function() {
+                location.href = url;
+            }, 300);
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：发送通知
+        function postNotification(icon, title, content, clickFunc) {
+            var clickFuncStr = clickFunc.toString();
+            var postData = {
+                "type": "notification",
+                "icon": icon,
+                "title": title,
+                "content": content,
+                "clickFunc": clickFuncStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //禁用开发者选项
+        function stopDevMode() {
+            mdui.dialog({
+                title: '禁用开发者选项',
+                content: '开发者选项禁用后，其中的设置仍然保存，但修改前需要再次启用。',
+                buttons: [{
+                        text: '取消'
+                    },
+                    {
+                        text: '确认',
+                        onClick: function(inst) {
+                            localStorage.setItem("devMode", 0);
+                            postToast("开发者选项已禁用");
+                            openPage("settings.html");
+                        }
+                    }
+                ]
+            });
+        }
+        //函数：发送测试通知
+        function sendTestNotification() {
+            postNotification(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">code</i>`, "这是测试通知标题", "这是测试通知内容", function() {
+                alert("这是测试通知回调");
+            });
+        }
+        //函数：设置自定义 HTML 代码
+        function setCustomHTML() {
+            localStorage.setItem("customHTML", document.getElementById("HTMLInput").value);
+            postToast("自定义 HTML 代码已设置");
+            postScript(function() {
+                getCustomHTML();
+            });
+        }
+        //事件：对话框打开完成
+        document.getElementById("customHTML").addEventListener("opened.mdui.dialog", function() {
+            document.getElementById("HTMLInput").focus();
+            document.getElementById("HTMLInput").value = localStorage.getItem("customHTML");
+        });
+        //获取系统更新通知设置
+        if (localStorage.getItem("updateNotification") == 1) {
+            document.getElementById("updateNotification").checked = true;
+        }
+        //设置系统更新是否通知
+        function updateNotification() {
+            if (localStorage.getItem("updateNotification") == 1) {
+                localStorage.setItem("updateNotification", 0);
+                postScript(function() {
+                    checkUpdate();
+                });
+            } else {
+                localStorage.setItem("updateNotification", 1);
+                postScript(function() {
+                    checkUpdate();
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>显示</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings.html');">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">显示</a>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-center" style="max-width: 640px;">
+        <li class="mdui-list-item mdui-ripple" mdui-dialog="{target: '#brightness'}">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">亮度</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" mdui-dialog="{target: '#wallpaper'}">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">壁纸</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">深色主题</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:darkTheme();" id="darkTheme" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">状态栏时间显示秒</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:displaySeconds();" id="displaySeconds" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">状态栏显示电池电量</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:displayBatteryLevel();" id="displayBatteryLevel" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">Dock 栏背景透明</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:transparentDockBar();" id="transparentDockBar" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:rfs();">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">全屏显示</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:ef();">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">退出全屏</div>
+            </div>
+        </li>
+    </ul>
+    <div class="mdui-dialog" id="brightness">
+        <div class="mdui-dialog-title">亮度</div>
+        <div class="mdui-dialog-content">
+            <label class="mdui-slider">
+                <input type="range" step="0.1" min="10" max="100" id="brightnessValue" value="100" />
+            </label>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>完成</button>
+        </div>
+    </div>
+    <div class="mdui-dialog" id="wallpaper">
+        <div class="mdui-dialog-title">壁纸</div>
+        <div class="mdui-dialog-content">
+            <ul class="mdui-list">
+                <li class="mdui-list-item mdui-ripple" onclick="javascript:setWallpaper('images/default_wallpaper.png');">
+                    <div class="mdui-list-item-content">
+                        <div class="mdui-list-item-title" mdui-dialog-close>默认</div>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple" onclick="javascript:setWallpaper('https://api.kdcc.cn/');">
+                    <div class="mdui-list-item-content">
+                        <div class="mdui-list-item-title" mdui-dialog-close>必应壁纸 API</div>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple" onclick="javascript:setWallpaper('https://t.mwm.moe/pc/');">
+                    <div class="mdui-list-item-content">
+                        <div class="mdui-list-item-title" mdui-dialog-close>次元 API</div>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple" mdui-dialog="{target: '#customWallpaper'}">
+                    <div class="mdui-list-item-content">
+                        <div class="mdui-list-item-title" mdui-dialog-close>自定义</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+        </div>
+    </div>
+    <div class="mdui-dialog" id="customWallpaper">
+        <div class="mdui-dialog-title">自定义壁纸</div>
+        <div class="mdui-dialog-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">URL</label>
+                <input class="mdui-textfield-input" type="url" id="wallpaperInput" />
+                <div class="mdui-textfield-error">URL 格式错误</div>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" onclick="javascript:setWallpaper(document.getElementById('wallpaperInput').value);" id="setCustomWallpaper" mdui-dialog-close>完成</button>
+        </div>
+    </div>
+    <script>
+        //函数：页面跳转
+        function openPage(url) {
+            document.documentElement.style.transform = "translateX(-50%)";
+            document.documentElement.style.opacity = 0;
+            window.setTimeout(function() {
+                location.href = url;
+            }, 300);
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            document.getElementById("darkTheme").checked = true;
+        }
+        //函数：设置深色主题
+        function darkTheme() {
+            if (localStorage.getItem("darkTheme") == "true") {
+                localStorage.setItem("darkTheme", "false");
+                document.body.classList.remove("mdui-theme-layout-dark");
+            } else {
+                localStorage.setItem("darkTheme", "true");
+                document.body.classList.add("mdui-theme-layout-dark");
+            }
+        }
+        //获取状态栏时间显示设置
+        if (localStorage.getItem("displaySeconds") == 1) {
+            document.getElementById("displaySeconds").checked = true;
+        }
+        //函数：设置状态栏时间是否显示秒
+        function displaySeconds() {
+            if (localStorage.getItem("displaySeconds") == 1) {
+                localStorage.setItem("displaySeconds", 0);
+            } else {
+                localStorage.setItem("displaySeconds", 1);
+            }
+        }
+        //获取电池电量显示设置
+        if (localStorage.getItem("displayBatteryLevel") == 1) {
+            document.getElementById("displayBatteryLevel").checked = true;
+        }
+        //函数：设置状态栏是否显示电池电量
+        function displayBatteryLevel() {
+            if (localStorage.getItem("displayBatteryLevel") == 1) {
+                localStorage.setItem("displayBatteryLevel", 0);
+                postScript(function() {
+                    getBatteryInfo();
+                });
+            } else {
+                localStorage.setItem("displayBatteryLevel", 1);
+                postScript(function() {
+                    getBatteryInfo();
+                });
+            }
+        }
+        //事件：亮度滑块值改变
+        document.getElementById("brightnessValue").addEventListener("input", function() {
+            localStorage.setItem("brightness", (this.value / 100));
+            postScript(function() {
+                getBrightness();
+            });
+        });
+        //获取屏幕亮度设置
+        document.getElementById("brightnessValue").value = localStorage.getItem("brightness") * 100;
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：发送通知
+        function postNotification(icon, title, content, clickFunc) {
+            var clickFuncStr = clickFunc.toString();
+            var postData = {
+                "type": "notification",
+                "icon": icon,
+                "title": title,
+                "content": content,
+                "clickFunc": clickFuncStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //函数：设置壁纸
+        function setWallpaper(url) {
+            localStorage.setItem("wallpaper", url);
+            postScript(function() {
+                getWallpaper();
+            });
+            postToast("壁纸已设置");
+        }
+        //事件：对话框打开完成
+        document.getElementById("customWallpaper").addEventListener("opened.mdui.dialog", function() {
+            document.getElementById("wallpaperInput").value = "https://";;
+            document.getElementById("wallpaperInput").focus();
+        });
+        //获取 Dock 栏设置
+        if (localStorage.getItem("transparentDockBar") == 1) {
+            document.getElementById("transparentDockBar").checked = true;
+        }
+        //函数：设置 Dock 栏是否透明
+        function transparentDockBar() {
+            if (localStorage.getItem("transparentDockBar") == 1) {
+                localStorage.setItem("transparentDockBar", 0);
+                postScript(function() {
+                    getDockBarInfo();
+                });
+            } else {
+                localStorage.setItem("transparentDockBar", 1);
+                postScript(function() {
+                    getDockBarInfo();
+                });
+            }
+        }
+        //函数：全屏显示与退出全屏
+        function rfs() {
+            postNotification(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">fullscreen</i>`, "全屏显示", "点按此通知以请求全屏显示", function() {
+                requestFullScreen(document.documentElement);
+            })
+        }
+
+        function ef() {
+            postScript(function() {
+                exitFull();
+            });
+        }
+        //事件：在文本框中按下回车键
+        document.getElementById("wallpaperInput").addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("setCustomWallpaper").click();
+            }
+        });
+    </script>
+</body>
+
+</html>

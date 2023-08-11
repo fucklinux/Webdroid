@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <title>Webdroid</title>
+</head>
+
+<body style="background: #000;">
+    <img src="images/android-logo-mask.png" style="width: 256px;position: fixed;left: calc(50% - 128px);top: calc(50% - 64px);z-index: 114514;">
+    <marquee style="height: 64px;width: 256px;position: fixed;left: calc(50% - 128px);top: calc(50% - 64px);z-index: -114514;background: #fff;" scrollamount="25" direction="right"><img src="images/android-logo-shine.png"></marquee>
+    <script>
+        //延时执行：转到启动器页面
+        window.setTimeout(function() {
+            location.href = "launcher.html";
+        }, 7000);
+    </script>
+</body>
+
+</html>

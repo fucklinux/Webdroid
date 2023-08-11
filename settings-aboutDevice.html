@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>关于设备</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings.html');">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">关于设备</a>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-center" style="max-width: 640px;">
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:jumpApp('update.html','#1976D2','#000','#fff','#fff');">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">系统更新</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:startDevMode();">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">Webdroid 版本</div>
+                <div class="mdui-list-item-text" id="versionName"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">构建日期</div>
+                <div class="mdui-list-item-text" id="buildDate" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">开发者</div>
+                <div class="mdui-list-item-text">Burger Studio</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('https://www.mdui.org/');">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">前端框架</div>
+                <div class="mdui-list-item-text">mdui-v1.0.1</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('https://venter.top/hopweb/index.html');">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">开发工具</div>
+                <div class="mdui-list-item-text">HopWeb</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">Cookie 开启状态</div>
+                <div class="mdui-list-item-text" id="1" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器应用程序名称</div>
+                <div class="mdui-list-item-text" id="2" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器应用程序代码名称</div>
+                <div class="mdui-list-item-text" id="3" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器引擎</div>
+                <div class="mdui-list-item-text" id="4" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器版本</div>
+                <div class="mdui-list-item-text" id="5" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器代理</div>
+                <div class="mdui-list-item-text" id="6" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器平台</div>
+                <div class="mdui-list-item-text" id="7" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器语言</div>
+                <div class="mdui-list-item-text" id="8" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">浏览器在线状态</div>
+                <div class="mdui-list-item-text" id="9" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">Java 开启状态</div>
+                <div class="mdui-list-item-text" id="10" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+    </ul>
+    <script>
+        //函数：页面跳转
+        function openPage(url) {
+            document.documentElement.style.transform = "translateX(-50%)";
+            document.documentElement.style.opacity = 0;
+            window.setTimeout(function() {
+                location.href = url;
+            }, 300);
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            document.getElementById("1").innerText = navigator.cookieEnabled;
+            document.getElementById("2").innerText = navigator.appName;
+            document.getElementById("3").innerText = navigator.appCodeName;
+            document.getElementById("4").innerText = navigator.product;
+            document.getElementById("5").innerText = navigator.appVersion;
+            document.getElementById("6").innerText = navigator.userAgent;
+            document.getElementById("7").innerText = navigator.platform;
+            document.getElementById("8").innerText = navigator.language;
+            document.getElementById("9").innerText = navigator.onLine;
+            document.getElementById("10").innerText = navigator.javaEnabled();
+            document.getElementById("versionName").innerText = versionName;
+            document.getElementById("buildDate").innerText = buildDate;
+        };
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //确定是否启用开发者选项
+        if (localStorage.getItem("devMode") == 1) {
+            devClick = 5;
+        } else {
+            devClick = 0;
+        }
+        //函数：启用开发者选项
+        function startDevMode() {
+            if (devClick < 4) {
+                postToast("点按 " + (4 - devClick) + " 次即可启用开发者选项");
+                devClick++;
+            } else {
+                postToast("开发者选项已启用");
+                localStorage.setItem("devMode", 1);
+            }
+        };
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+            postToast("已复制到剪贴板");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：应用跳转
+        function jumpApp(url, color1, color2, textColor1, textColor2) {
+            var postData = {
+                "type": "jumpApp",
+                "url": url,
+                "color1": color1,
+                "color2": color2,
+                "textColor1": textColor1,
+                "textColor2": textColor2
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+            document.documentElement.style.transform = "translateX(-100%)";
+            document.documentElement.style.opacity = 0;
+        }
+    </script>
+    <script src="update.js"></script>
+</body>
+
+</html>

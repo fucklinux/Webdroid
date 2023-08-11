@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>系统更新</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        #card {
+            width: 70%;
+            height: 70%;
+            max-width: 640px;
+            max-height: 640px;
+            position: absolute;
+            padding: 32px;
+            background: #fff;
+            color: #000;
+            -webkit-box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+            box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+            animation-name: opacity;
+            animation-delay: .4s;
+            animation-duration: .2s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+
+        @keyframes opacity {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #title {
+            font-size: 24px;
+        }
+
+        #spinner {
+            padding: 16px;
+        }
+
+        #updateButton,
+        #backButton {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue mdui-theme-accent-blue mdui-color-blue-700">
+    <div id="card">
+        <i class="mdui-icon material-icons mdui-text-color-theme-accent" style="font-size: 32px;">system_update</i>
+        <p id="title">正在检查更新......</p>
+        <p id="versionName"></p>
+        <p id="date"></p>
+        <p id="content"></p>
+        <div id="updateButton">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:update();">更新</button>
+        </div>
+        <div id="backButton">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:goBack();">返回</button>
+        </div>
+        <div id="spinner">
+            <div class="mdui-spinner mdui-center"></div>
+        </div>
+    </div>
+    <script>
+        //事件：页面加载完成
+        window.onload = function() {
+            var card = document.getElementById("card");
+            window.setInterval(function() {
+                card.style.top = "calc(50% - " + card.clientHeight / 2 + "px)";
+                card.style.left = "calc(50% - " + card.clientWidth / 2 + "px)";
+            }, 100);
+            checkUpdate();
+            if (localStorage.getItem("darkTheme") == "true") {
+                card.style.background = "#303030";
+                card.style.color = "#fff";
+            }
+        };
+
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：应用跳转
+        function jumpApp(url, color1, color2, textColor1, textColor2) {
+            var postData = {
+                "type": "jumpApp",
+                "url": url,
+                "color1": color1,
+                "color2": color2,
+                "textColor1": textColor1,
+                "textColor2": textColor2
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+            document.documentElement.style.transform = "translateX(-100%)";
+            document.documentElement.style.opacity = 0;
+        }
+        //函数：处理更新数据
+        function processUpdate() {
+            document.getElementById("spinner").style = updateData.spinner;
+            document.getElementById("versionName").innerText = "版本名称：" + updateData.versionName;
+            document.getElementById("date").innerText = "更新日期：" + updateData.updateDate;
+            document.getElementById("content").innerHTML = "更新内容：<p style='font-size: 16px;'>" + updateData.change + "</p>";
+            //判断是否为最新版本
+            if (versionCode < updateData.versionCode) {
+                document.getElementById("title").innerText = "有可用的系统更新";
+                document.getElementById("updateButton").style.display = "block";
+            } else {
+                document.getElementById("title").innerText = "已是最新版本";
+                document.getElementById("backButton").style.display = "block";
+            }
+        }
+        //函数：跳转到最新版本下载页面
+        function update() {
+            postScript(function() {
+                window.open("https://www.123pan.com/s/kklDVv-Muubd.html", "_blank");
+            });
+        }
+        //函数：返回
+        function goBack() {
+            jumpApp('settings-aboutDevice.html', '#455A64', '#000', '#fff', '#fff');
+        }
+    </script>
+    <script src="update.js"></script>
+</body>
+
+</html>

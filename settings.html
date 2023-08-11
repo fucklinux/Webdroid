@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>设置</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-typo-title">设置</a>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-center" style="max-width: 640px;">
+        <li class="mdui-subheader">设备</li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-display.html');">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">brightness_medium</i>
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">显示</div>
+                <div class="mdui-list-item-text">亮度、深色主题</div>
+            </div>
+        </li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-battery.html');">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">battery_full</i>
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">电池</div>
+                <div class="mdui-list-item-text" id="batteryInfo"></div>
+            </div>
+        </li>
+        <li class="mdui-subheader">系统</li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-devOptions.html');" id="devOptions">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">code</i>
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">开发者选项</div>
+                <div class="mdui-list-item-text">实验性功能</div>
+            </div>
+        </li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-aboutDevice.html');">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">info_outline</i>
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">关于设备</div>
+                <div class="mdui-list-item-text">Webdroid 1.3.0</div>
+            </div>
+        </li>
+    </ul>
+    <script>
+        //函数：页面跳转
+        function openPage(url) {
+            document.documentElement.style.transform = "translateX(-50%)";
+            document.documentElement.style.opacity = 0;
+            window.setTimeout(function() {
+                location.href = url;
+            }, 300);
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+        }
+        //获取开发者选项启用状态
+        if (localStorage.getItem("devMode") != 1) {
+            document.getElementById("devOptions").style.display = "none";
+        }
+        //函数：获取电池信息
+        function getBatteryInfo() {
+            navigator.getBattery().then(function(battery) {
+                document.getElementById("batteryInfo").innerText = (battery.level * 100).toFixed(0) + "% - " + (battery.charging ? "正在充电" : "未在充电");
+            });
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            getBatteryInfo();
+        };
+        //事件：电池信息改变
+        navigator.getBattery().then(function(battery) {
+            battery.onlevelchange = function() {
+                getBatteryInfo();
+            };
+            battery.onchargingchange = function() {
+                getBatteryInfo();
+            };
+        });
+    </script>
+</body>
+
+</html>
