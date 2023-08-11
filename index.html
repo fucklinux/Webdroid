@@ -12,10 +12,21 @@
     <img src="images/android-logo-mask.png" style="width: 256px;position: fixed;left: calc(50% - 128px);top: calc(50% - 64px);z-index: 114514;">
     <marquee style="height: 64px;width: 256px;position: fixed;left: calc(50% - 128px);top: calc(50% - 64px);z-index: -114514;background: #fff;" scrollamount="25" direction="right"><img src="images/android-logo-shine.png"></marquee>
     <script>
-        //延时执行：转到启动器页面
-        window.setTimeout(function() {
-            location.href = "launcher.html";
-        }, 7000);
+        //事件：页面加载完成
+        window.onload = function() {
+            getWallpaper();
+        };
+        //函数：获取壁纸并跳转到启动器页面
+        function getWallpaper() {
+            var wallpaperGetting = new XMLHttpRequest();
+            wallpaperGetting.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    location.href = "launcher.html";
+                }
+            };
+            wallpaperGetting.open("GET", "images/default_wallpaper.png", true);
+            wallpaperGetting.send();
+        }
     </script>
 </body>
 

@@ -163,15 +163,29 @@
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
             document.getElementById("darkTheme").checked = true;
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#455A64";;
+            });
         }
         //函数：设置深色主题
         function darkTheme() {
             if (localStorage.getItem("darkTheme") == "true") {
                 localStorage.setItem("darkTheme", "false");
                 document.body.classList.remove("mdui-theme-layout-dark");
+                postScript(function() {
+                    gebi("statusBar").style.background = "#455A64";;
+                });
             } else {
                 localStorage.setItem("darkTheme", "true");
                 document.body.classList.add("mdui-theme-layout-dark");
+                document.body.classList.add("mdui-theme-layout-dark");
+                postScript(function() {
+                    gebi("statusBar").style.background = "#212121";;
+                });
             }
         }
         //获取状态栏时间显示设置

@@ -80,6 +80,13 @@
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#455A64";;
+            });
         }
         //函数：时间转换
         function timeConvert(original) {
@@ -136,6 +143,15 @@
             var postData = {
                 "type": "toast",
                 "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
             };
             window.parent.postMessage(JSON.stringify(postData), "/");
         }

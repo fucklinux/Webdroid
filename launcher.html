@@ -550,11 +550,15 @@
         function processUpdate() {
             //判断是否为最新版本
             if (versionCode < updateData.versionCode) {
-                notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">system_update</i>`, "有可用都系统更新", updateData.versionName + "版本已发布", function() {
+                notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">system_update</i>`, "有可用的系统更新", updateData.versionName + " 版本已发布", function() {
                     launchApp("update.html", "#1976D2", "#000", "#fff", "#fff");
                 });
             }
         }
+        //屏蔽右键菜单
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        });
     </script>
     <script src="update.js"></script>
 </body>

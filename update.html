@@ -16,6 +16,11 @@
             animation-duration: .3s;
         }
 
+        body {
+            background: #1976D2;
+            transition: .3s !important;
+        }
+
         @keyframes slideIn {
             from {
                 transform: translateX(50%);
@@ -44,6 +49,7 @@
             animation-duration: .2s;
             animation-fill-mode: forwards;
             opacity: 0;
+            overflow-y: scroll;
         }
 
         @keyframes opacity {
@@ -71,7 +77,7 @@
     </style>
 </head>
 
-<body class="mdui-theme-primary-blue mdui-theme-accent-blue mdui-color-blue-700">
+<body class="mdui-theme-primary-blue mdui-theme-accent-blue">
     <div id="card">
         <i class="mdui-icon material-icons mdui-text-color-theme-accent" style="font-size: 32px;">system_update</i>
         <p id="title">正在检查更新......</p>
@@ -101,6 +107,9 @@
                 card.style.background = "#303030";
                 card.style.color = "#fff";
             }
+            postScript(function() {
+                gebi("statusBar").style.background = "#1976D2";;
+            });
         };
 
         //接入 API：执行 JavaScript 脚本
@@ -123,7 +132,7 @@
                 "textColor2": textColor2
             };
             window.parent.postMessage(JSON.stringify(postData), "/");
-            document.documentElement.style.transform = "translateX(-100%)";
+            document.body.style.background = "rgba(0, 0, 0, 0)";
             document.documentElement.style.opacity = 0;
         }
         //函数：处理更新数据
@@ -136,6 +145,8 @@
             if (versionCode < updateData.versionCode) {
                 document.getElementById("title").innerText = "有可用的系统更新";
                 document.getElementById("updateButton").style.display = "block";
+                document.getElementById("backButton").style.display = "block";
+                document.getElementById("backButton").style.float = "left";
             } else {
                 document.getElementById("title").innerText = "已是最新版本";
                 document.getElementById("backButton").style.display = "block";

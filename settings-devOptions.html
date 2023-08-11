@@ -98,6 +98,13 @@
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#455A64";;
+            });
         }
         //接入 API：发送 Toast
         function postToast(message) {
@@ -174,9 +181,6 @@
         function updateNotification() {
             if (localStorage.getItem("updateNotification") == 1) {
                 localStorage.setItem("updateNotification", 0);
-                postScript(function() {
-                    checkUpdate();
-                });
             } else {
                 localStorage.setItem("updateNotification", 1);
                 postScript(function() {

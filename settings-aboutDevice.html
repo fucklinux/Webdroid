@@ -62,8 +62,8 @@
         <li class="mdui-divider mdui-m-y-0"></li>
         <li class="mdui-list-item mdui-ripple">
             <div class="mdui-list-item-content">
-                <div class="mdui-list-item-title">开发者</div>
-                <div class="mdui-list-item-text">Burger Studio</div>
+                <div class="mdui-list-item-title">贡献者</div>
+                <div class="mdui-list-item-text">Burger Studio & WHRSTUDIO</div>
             </div>
         </li>
         <li class="mdui-divider mdui-m-y-0"></li>
@@ -163,6 +163,13 @@
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#455A64";;
+            });
         }
         //事件：页面加载完成
         window.onload = function() {

@@ -42,7 +42,7 @@
             <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">brightness_medium</i>
             <div class="mdui-list-item-content">
                 <div class="mdui-list-item-title">显示</div>
-                <div class="mdui-list-item-text">亮度、深色主题</div>
+                <div class="mdui-list-item-text">亮度、壁纸、深色主题</div>
             </div>
         </li>
         <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-battery.html');">
@@ -80,6 +80,13 @@
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#455A64";;
+            });
         }
         //获取开发者选项启用状态
         if (localStorage.getItem("devMode") != 1) {
@@ -104,6 +111,15 @@
                 getBatteryInfo();
             };
         });
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
     </script>
 </body>
 
