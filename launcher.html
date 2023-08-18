@@ -206,10 +206,13 @@
         </div>
     </div>
     <div id="dockBar">
-        <div class="mdui-container" style="margin-left: 16px;margin-right: 16px;width: calc(100% - 32px);">
+        <div class="mdui-container" style="padding-left: 16px;padding-right: 16px;max-width: 480px;">
             <div class="mdui-row-xs-4">
                 <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('http://www.bing.com/', '#000', '#000', '#fff', '#fff');">
-                    <img src="images/bing.png">
+                    <img src="images/Bing.png">
+                </div>
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('https://goro.top/WebMC/', '#000', '#000', '#fff', '#fff');">
+                    <img src="images/Minecraft.png">
                 </div>
             </div>
         </div>
@@ -222,14 +225,14 @@
             </div>
         </div>
     </div>
-    <div class="mdui-container" style="margin-top: 28px;margin-left: 16px;margin-right: 16px;width: calc(100% - 32px);">
+    <div class="mdui-container mdui-center" style="padding-top: 28px;padding-left: 16px;padding-right: 16px;max-width: 480px;">
         <div class="mdui-row-xs-4">
             <div class="mdui-col icon" onclick="javascript:launchApp('settings.html', '#455A64', '#000', '#fff', '#fff');">
-                <img src="images/ic_launcher_settings.png">
+                <img src="images/Settings.png">
                 <p>设置</p>
             </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
-                <img src="images/bing.png">
+                <img src="images/Bing.png">
                 <p>Bing</p>
             </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bgtool.tk/', '#ECEFF1', '#000', '#000', '#fff');">
@@ -237,12 +240,20 @@
                 <p>BGTool</p>
             </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://music.163.com/', '#D43C33', '#000', '#fff', '#fff');">
-                <img src="images/netEaseMusic.png">
+                <img src="images/NetEaseMusic.png">
                 <p>网易云音乐</p>
             </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bilibili.com/', '#FB7299', '#000', '#fff', '#fff');">
                 <img src="images/bilibili.png">
                 <p>哔哩哔哩</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://goro.top/WebMC/', '#000', '#000', '#fff', '#fff');">
+                <img src="images/Minecraft.png">
+                <p>Minecraft</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://vercel.phicommunity.com.cn/', '#000', '#000', '#fff', '#fff');">
+                <img src="images/Phigros.png">
+                <p>Phigros</p>
             </div>
         </div>
     </div>
@@ -288,6 +299,7 @@
             getWallpaper();
             getDockBarInfo();
             getCustomHTML();
+            getInvert();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -435,6 +447,9 @@
         if (!localStorage.getItem("updateNotification")) {
             localStorage.setItem("updateNotification", 1);
         }
+        if (!localStorage.getItem("invert")) {
+            localStorage.setItem("invert", 0);
+        }
         //设置是否已提示“电池电量不足”
         batteryAlerted = 0;
         //函数：获取电池信息
@@ -483,6 +498,14 @@
         //获取并设置屏幕亮度
         function getBrightness() {
             gebi("cover").style.background = "rgba(0, 0, 0, " + (1 - localStorage.getItem("brightness")) + ")";
+        }
+        //获取并设置颜色反转
+        function getInvert() {
+            if (localStorage.getItem("invert") == 1) {
+                gebi("cover").style.backdropFilter = "invert(100%)";
+            } else {
+                gebi("cover").style.backdropFilter = "";
+            }
         }
         //事件：网络状态改变
         window.addEventListener("offline", function() {

@@ -61,6 +61,17 @@
         </li>
         <li class="mdui-divider mdui-m-y-0"></li>
         <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">颜色反转</div>
+                <div class="mdui-list-item-text">可能会影响性能</div>
+            </div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:invert();" id="invert" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
             <div class="mdui-list-item-content">状态栏时间显示秒</div>
             <label class="mdui-switch">
                 <input type="checkbox" onclick="javascript:displaySeconds();" id="displaySeconds" />
@@ -185,6 +196,24 @@
                 document.body.classList.add("mdui-theme-layout-dark");
                 postScript(function() {
                     gebi("statusBar").style.background = "#212121";;
+                });
+            }
+        }
+        //颜色反转设置
+        if (localStorage.getItem("invert") == 1) {
+            document.getElementById("invert").checked = true;
+        }
+        //函数：设置颜色反转
+        function invert() {
+            if (localStorage.getItem("invert") == 1) {
+                localStorage.setItem("invert", 0);
+                postScript(function() {
+                    getInvert();
+                });
+            } else {
+                localStorage.setItem("invert", 1);
+                postScript(function() {
+                    getInvert();
                 });
             }
         }
