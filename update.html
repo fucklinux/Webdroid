@@ -85,6 +85,7 @@
         <p id="versionName"></p>
         <p id="date"></p>
         <p id="content"></p>
+        <br>
         <div id="updateButton">
             <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:update();">更新</button>
         </div>
@@ -145,12 +146,14 @@
             //判断是否为最新版本
             if (versionCode < updateData.versionCode) {
                 document.getElementById("title").innerText = "有可用的系统更新";
-                document.getElementById("updateButton").style.display = "block";
-                document.getElementById("backButton").style.display = "block";
+                document.getElementById("updateButton").style.display = "inline-block";
+                document.getElementById("backButton").style.display = "inline-block";
                 document.getElementById("backButton").style.float = "left";
+                document.getElementById("updateButton").style.float = "right";
             } else {
                 document.getElementById("title").innerText = "已是最新版本";
-                document.getElementById("backButton").style.display = "block";
+                document.getElementById("backButton").style.display = "inline-block";
+                document.getElementById("backButton").style.float = "right";
             }
         }
         //函数：跳转到最新版本下载页面

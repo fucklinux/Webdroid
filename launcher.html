@@ -190,6 +190,10 @@
         .mdui-theme-layout-dark .notification:hover {
             background: #404040;
         }
+
+        #appList::-webkit-scrollbar-corner {
+            display: none;
+        }
     </style>
 </head>
 
@@ -206,9 +210,15 @@
         </div>
     </div>
     <div id="dockBar">
-        <div class="mdui-container" style="padding-left: 16px;padding-right: 16px;max-width: 480px;">
+        <div class="mdui-container" style="padding-left: 16px;padding-right: 16px;max-width: 640px;">
             <div class="mdui-row-xs-4">
-                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('http://www.bing.com/', '#000', '#000', '#fff', '#fff');">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('phone.html', '#303F9F', '#000', '#fff', '#fff');">
+                    <img src="images/phone.png">
+                </div>
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('mms.html', '#33691E', '#000', '#fff', '#fff');">
+                    <img src="images/mms.png">
+                </div>
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
                     <img src="images/Bing.png">
                 </div>
                 <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('https://goro.top/WebMC/', '#000', '#000', '#fff', '#fff');">
@@ -225,11 +235,19 @@
             </div>
         </div>
     </div>
-    <div class="mdui-container mdui-center" style="padding-top: 28px;padding-left: 16px;padding-right: 16px;max-width: 480px;">
-        <div class="mdui-row-xs-4">
+    <div class="mdui-container mdui-center" style="padding-top: 28px;padding-left: 16px;padding-right: 16px;max-width: 640px;">
+        <div class="mdui-row-xs-4" style="overflow: scroll;" id="appList">
             <div class="mdui-col icon" onclick="javascript:launchApp('settings.html', '#455A64', '#000', '#fff', '#fff');">
                 <img src="images/Settings.png">
                 <p>设置</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('contacts.html', '#01579B', '#000', '#fff', '#fff');">
+                <img src="images/contacts.png">
+                <p>通讯录</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('files.html', '#455A64', '#000', '#fff', '#fff');">
+                <img src="images/files.png">
+                <p>文件</p>
             </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
                 <img src="images/Bing.png">
@@ -254,6 +272,10 @@
             <div class="mdui-col icon" onclick="javascript:launchApp('https://vercel.phicommunity.com.cn/', '#000', '#000', '#fff', '#fff');">
                 <img src="images/Phigros.png">
                 <p>Phigros</p>
+            </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('https://ol.woobx.cn/', '#FAFAFA', '#000', '#000', '#fff');">
+                <img src="images/WoodBox.png">
+                <p>一个木函</p>
             </div>
         </div>
     </div>
@@ -300,6 +322,7 @@
             getDockBarInfo();
             getCustomHTML();
             getInvert();
+            setAppList();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -582,6 +605,16 @@
         document.addEventListener("contextmenu", function(e) {
             e.preventDefault();
         });
+        //确定图标列表最大高度
+        function setAppList() {
+            gebi("appList").style.maxHeight = document.documentElement.clientHeight - 156 + "px";
+        }
+        //事件：屏幕方向改变
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function() {
+            window.setTimeout(function() {
+                setAppList();
+            }, 500);
+        }, false);
     </script>
     <script src="update.js"></script>
 </body>

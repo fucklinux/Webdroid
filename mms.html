@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="images/mms.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>短信</title>
+    <style>
+        html {
+            transition-property: opacity;
+            transition: .3s;
+            animation-name: opacity;
+            animation-duration: .3s;
+        }
+
+        @keyframes opacity {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-light-green mdui-theme-accent-orange mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme-700">
+            <a class="mdui-typo-title mdui-text-color-white">短信</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-menu="{target: '#menu'}">
+                <i class="mdui-icon material-icons mdui-text-color-white">more_vert</i>
+            </button>
+            <ul class="mdui-menu" id="menu">
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">已归档的对话</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">设置</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -114514;" class="mdui-valign">
+        <div style="width: 100%;text-align: center;">您的短信对话将列在此处</div>
+    </div>
+    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent">
+        <i class="mdui-icon material-icons mdui-text-color-white">add</i>
+    </button>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#33691E";;
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="images/phone.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>电话</title>
+    <style>
+        html {
+            transition-property: opacity;
+            transition: .3s;
+            animation-name: opacity;
+            animation-duration: .3s;
+        }
+
+        @keyframes opacity {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .mdui-theme-layout-dark .mdui-bottom-nav {
+            background: #212121 !important;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-blue mdui-bottom-nav-fixed mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <i class="mdui-icon material-icons">search</i>
+            <div class="mdui-textfield">
+                <input class="mdui-textfield-input" type="text" placeholder="搜素联系人" style="color: #fff;transform: translateY(-4px);" />
+            </div>
+            <div class="mdui-toolbar-spacer"></div>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+                <i class="mdui-icon material-icons">keyboard_voice</i>
+            </button>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-menu="{target: '#menu'}">
+                <i class="mdui-icon material-icons">more_vert</i>
+            </button>
+            <ul class="mdui-menu" id="menu">
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">通话记录</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">导入/导出</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">新建联系人</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">设置</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="width: 100%;height: 100%;position: fixed;left: 0;top: 0;z-index: -114514;" class="mdui-valign">
+        <div class="mdui-center" id="content" style="text-align: center;">
+            <div style="opacity: 54%;">
+                <i class="mdui-icon material-icons" style="font-size: 40px;">star</i>
+                <i class="mdui-icon material-icons" style="font-size: 80px;">call</i>
+                <i class="mdui-icon material-icons" style="font-size: 40px;">access_time</i>
+                <br><br>
+                尚未给任何联系人设定快速拨号
+            </div>
+            <br>
+            <button class="mdui-btn mdui-ripple mdui-text-color-theme-accent">收藏联系人</button>
+        </div>
+    </div>
+    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent" style="transform: translateY(-56px);">
+        <i class="mdui-icon material-icons">dialpad</i>
+    </button>
+    <div class="mdui-bottom-nav mdui-color-theme">
+        <a class="mdui-ripple mdui-ripple-white mdui-bottom-nav-active">
+            <i class="mdui-icon material-icons">star</i>
+            <label>快速拨号</label>
+        </a>
+        <a class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">access_time</i>
+            <label>通话记录</label>
+        </a>
+        <a class="mdui-ripple mdui-ripple-white">
+            <i class="mdui-icon material-icons">people</i>
+            <label>通讯录</label>
+        </a>
+    </div>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";;
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#303F9F";;
+            });
+        }
+        //事件：切换导航项
+        document.addEventListener("change.mdui.bottomNav", function(event) {
+            if (event._detail.index == 0) {
+                document.getElementById("content").innerHTML = `<div style="opacity: 54%;">
+                <i class="mdui-icon material-icons" style="font-size: 40px;">star</i>
+                <i class="mdui-icon material-icons" style="font-size: 80px;">call</i>
+                <i class="mdui-icon material-icons" style="font-size: 40px;">access_time</i>
+                <br><br>
+                尚未给任何联系人设定快速拨号
+            </div>
+            <br>
+            <button class="mdui-btn mdui-ripple mdui-text-color-theme-accent">收藏联系人</button>`;
+            } else if (event._detail.index == 1) {
+                document.getElementById("content").innerHTML = `<div style="opacity: 54%;">
+                <i class="mdui-icon material-icons" style="font-size: 80px;">access_time</i>
+                <br><br>
+                您没有任何通话记录
+            </div>
+            <br>
+            <button class="mdui-btn mdui-ripple mdui-text-color-theme-accent">拨打电话</button>`;
+            } else {
+                document.getElementById("content").innerHTML = `<div style="opacity: 54%;">
+                <i class="mdui-icon material-icons" style="font-size: 80px;">person</i>
+                <br><br>
+                您没有任何联系人
+            </div>
+            <br>
+            <button class="mdui-btn mdui-ripple mdui-text-color-theme-accent">添加联系人</button>`;
+            }
+        });
+    </script>
+</body>
+
+</html>
