@@ -45,6 +45,13 @@
                 <div class="mdui-list-item-text">亮度、壁纸、深色主题</div>
             </div>
         </li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-apps.html');">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">adb</i>
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">应用</div>
+                <div class="mdui-list-item-text" id="appNumber"></div>
+            </div>
+        </li>
         <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-battery.html');">
             <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">battery_full</i>
             <div class="mdui-list-item-content">
@@ -102,6 +109,7 @@
         window.onload = function() {
             getBatteryInfo();
             document.getElementById("versionName").innerText = "Webdroid " + versionName;
+            document.getElementById("appNumber").innerText = "已安装 " + JSON.parse(localStorage.getItem("apps")).length + " 个应用";
         };
         //事件：电池信息改变
         navigator.getBattery().then(function(battery) {

@@ -1,7 +1,7 @@
 //设置当前版本数据
-var versionName = "1.5.0";
-var versionCode = 105000;
-var buildDate = "2023年8月29日";
+var versionName = "1.6.0";
+var versionCode = 106000;
+var buildDate = "2023年8月30日";
 //函数：获取最新版本数据
 function checkUpdate() {
     var getUpdateData = new XMLHttpRequest();

@@ -277,9 +277,32 @@
                 <img src="images/WoodBox.png">
                 <p>一个木函</p>
             </div>
+            <div id="userApps"></div>
         </div>
     </div>
     <iframe id="iframe"></iframe>
+    <div class="mdui-dialog" id="appInstaller">
+        <div class="mdui-dialog-title">
+            <img id="installerIcon" style="display: inline-block;width: 32px;height: 32px;border-radius: 8px;vertical-align: middle;">
+            <div id="installerName" style="display: inline-block;vertical-align: middle;margin-left: 4px;"></div>
+        </div>
+        <div class="mdui-dialog-content">要添加此应用吗？</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple mdui-text-color-blue-accent" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple mdui-text-color-blue-accent" id="installerContinue" mdui-dialog-close>添加</button>
+        </div>
+    </div>
+    <div class="mdui-dialog" id="appUninstaller">
+        <div class="mdui-dialog-title">
+            <img id="uninstallerIcon" style="display: inline-block;width: 32px;height: 32px;border-radius: 8px;vertical-align: middle;">
+            <div id="uninstallerName" style="display: inline-block;vertical-align: middle;margin-left: 4px;"></div>
+        </div>
+        <div class="mdui-dialog-content">要移除此应用吗？</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple mdui-text-color-blue-accent" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple mdui-text-color-blue-accent" id="uninstallerContinue" mdui-dialog-close>移除</button>
+        </div>
+    </div>
     <script>
         //设置应用打开状态
         opened = 0;
@@ -323,6 +346,7 @@
             getCustomHTML();
             getInvert();
             setAppList();
+            freshApps();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -438,6 +462,14 @@
             if (getData.type == "jumpApp") {
                 launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
             }
+            //API：添加应用
+            if (getData.type == "addApp") {
+                addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+            }
+            //API：移除应用
+            if (getData.type == "removeApp") {
+                removeApp(getData.index);
+            }
         }, false);
         //事件：屏幕方向改变
         window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function() {
@@ -472,6 +504,9 @@
         }
         if (!localStorage.getItem("invert")) {
             localStorage.setItem("invert", 0);
+        }
+        if (!localStorage.getItem("apps")) {
+            localStorage.setItem("apps", "[]");
         }
         //设置是否已提示“电池电量不足”
         batteryAlerted = 0;
@@ -615,6 +650,54 @@
                 setAppList();
             }, 500);
         }, false);
+        //函数：添加应用
+        function addApp(icon, name, url, color1, color2, textColor1, textColor2) {
+            var installingInfo = [icon, name, url, color1, color2, textColor1, textColor2];
+            var installerDialog = new mdui.Dialog("#appInstaller", {
+                history: false
+            });
+            gebi("navHome").click();
+            installerDialog.open();
+            gebi("installerIcon").src = icon;
+            gebi("installerName").innerText = name;
+            gebi("installerContinue").onclick = function() {
+                apps.push(installingInfo);
+                localStorage.setItem("apps", JSON.stringify(apps));
+                toast("已添加应用。");
+                freshApps();
+            };
+        }
+        //函数：移除应用
+        function removeApp(index) {
+            var uninstallerDialog = new mdui.Dialog("#appUninstaller", {
+                history: false
+            });
+            gebi("navHome").click();
+            uninstallerDialog.open();
+            gebi("uninstallerIcon").src = apps[index][0];
+            gebi("uninstallerName").innerText = apps[index][1];
+            gebi("uninstallerContinue").onclick = function() {
+                apps.splice(index, 1);
+                localStorage.setItem("apps", JSON.stringify(apps));
+                toast("已移除应用。");
+                freshApps();
+            };
+        }
+        //函数：刷新应用图标
+        function freshApps() {
+            if (JSON.parse(localStorage.getItem("apps")).length == 0) {
+                apps = [];
+            } else {
+                apps = JSON.parse(localStorage.getItem("apps"));
+            }
+            gebi("userApps").innerHTML = "";
+            apps.forEach(function(item) {
+                gebi("userApps").innerHTML += `<div class="mdui-col icon" onclick="javascript:launchApp('` + item[2] + `', '` + item[3] + `', '` + item[4] + `', '` + item[5] + `', '` + item[6] + `');">
+                    <img src="` + item[0] + `">
+                    <p>` + item[1] + `</p>
+                </div>`;
+            });
+        }
     </script>
     <script src="update.js"></script>
 </body>
