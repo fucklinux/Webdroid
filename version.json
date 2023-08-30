@@ -1,7 +1,7 @@
 {
-    "versionCode": 105000,
-    "versionName": "1.5.0",
-    "updateDate": "2023年8月29日",
-    "change": "-优化 UI<br>-新增 “电话”“短信”“通讯录”“文件”“一个木函”",
+    "versionCode": 106000,
+    "versionName": "1.6.0",
+    "updateDate": "2023年8月30日",
+    "change": "-新增 设置-应用<br>-新增 API：添加应用<br>-新增 API：移除应用",
     "spinner": "display: none !important;"
 }
