@@ -108,9 +108,9 @@
         .toast {
             position: fixed;
             bottom: 96px;
-            background: rgba(0, 0, 0, .8);
+            background: rgba(64, 64, 64, .85);
             color: #fff;
-            padding: 16px;
+            padding: 16px 24px;
             border-radius: 32px;
             animation-name: toast;
             animation-duration: 5s;
@@ -141,7 +141,8 @@
             100% {}
         }
 
-        #cover {
+        #cover,
+        #grayscale {
             position: fixed;
             left: 0;
             top: 0;
@@ -200,6 +201,7 @@
 <body>
     <div id="customHTMLDiv"></div>
     <div id="cover"></div>
+    <div id="grayscale"></div>
     <div id="statusBar" style="color: #fff;padding-top: 4px;">
         <div style="float: right;">
             <i class="mdui-icon material-icons" style="font-size: 18px;" id="WLANIcon">network_wifi</i>
@@ -249,6 +251,10 @@
                 <img src="images/files.png">
                 <p>文件</p>
             </div>
+            <div class="mdui-col icon" onclick="javascript:launchApp('AppStore.html', '#303F9F', '#000', '#fff', '#fff');">
+                <img src="images/AppStore.png">
+                <p>应用商店</p>
+            </div>
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
                 <img src="images/Bing.png">
                 <p>Bing</p>
@@ -256,26 +262,6 @@
             <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bgtool.tk/', '#ECEFF1', '#000', '#000', '#fff');">
                 <img src="images/BGTool.jpg">
                 <p>BGTool</p>
-            </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://music.163.com/', '#D43C33', '#000', '#fff', '#fff');">
-                <img src="images/NetEaseMusic.png">
-                <p>网易云音乐</p>
-            </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bilibili.com/', '#FB7299', '#000', '#fff', '#fff');">
-                <img src="images/bilibili.png">
-                <p>哔哩哔哩</p>
-            </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://goro.top/WebMC/', '#000', '#000', '#fff', '#fff');">
-                <img src="images/Minecraft.png">
-                <p>Minecraft</p>
-            </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://vercel.phicommunity.com.cn/', '#000', '#000', '#fff', '#fff');">
-                <img src="images/Phigros.png">
-                <p>Phigros</p>
-            </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://ol.woobx.cn/', '#FAFAFA', '#000', '#000', '#fff');">
-                <img src="images/WoodBox.png">
-                <p>一个木函</p>
             </div>
             <div id="userApps"></div>
         </div>
@@ -347,6 +333,7 @@
             getInvert();
             setAppList();
             freshApps();
+            getGrayscale();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -446,29 +433,30 @@
         window.addEventListener("message", function(e) {
             if (e.data == "") return;
             var getData = JSON.parse(e.data);
-            //API：发送 Toast
-            if (getData.type == "toast") {
-                toast(getData.message);
-            }
-            //API：发送通知
-            if (getData.type == "notification") {
-                notice(getData.icon, getData.title, getData.content, getData.clickFunc);
-            }
-            //API：执行 JavaScript 脚本
-            if (getData.type == "JavaScript") {
-                eval('(' + getData.script + ')();');
-            }
-            //API：应用跳转
-            if (getData.type == "jumpApp") {
-                launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
-            }
-            //API：添加应用
-            if (getData.type == "addApp") {
-                addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
-            }
-            //API：移除应用
-            if (getData.type == "removeApp") {
-                removeApp(getData.index);
+            switch (getData.type) {
+                //API：发送 Toast
+                case "toast":
+                    toast(getData.message);
+                    break;
+                    //API：发送通知
+                case "notification":
+                    notice(getData.icon, getData.title, getData.content, getData.clickFunc);
+                    break;
+                    //API：执行 JavaScript 脚本
+                case "JavaScript":
+                    eval('(' + getData.script + ')();');
+                    break;
+                    //API：应用跳转
+                case "jumpApp":
+                    launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    break;
+                    //API：添加应用
+                case "addApp":
+                    addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    break;
+                    //API：移除应用
+                case "removeApp":
+                    removeApp(getData.index);
             }
         }, false);
         //事件：屏幕方向改变
@@ -507,6 +495,9 @@
         }
         if (!localStorage.getItem("apps")) {
             localStorage.setItem("apps", "[]");
+        }
+        if (!localStorage.getItem("grayscale")) {
+            localStorage.setItem("grayscale", 0);
         }
         //设置是否已提示“电池电量不足”
         batteryAlerted = 0;
@@ -560,9 +551,17 @@
         //获取并设置颜色反转
         function getInvert() {
             if (localStorage.getItem("invert") == 1) {
-                gebi("cover").style.backdropFilter = "invert(100%)";
+                gebi("cover").style.backdropFilter = "invert(1)";
             } else {
                 gebi("cover").style.backdropFilter = "";
+            }
+        }
+        //获取并设置灰度
+        function getGrayscale() {
+            if (localStorage.getItem("grayscale") == 1) {
+                gebi("grayscale").style.backdropFilter = "grayscale(1)";
+            } else {
+                gebi("grayscale").style.backdropFilter = "";
             }
         }
         //事件：网络状态改变
