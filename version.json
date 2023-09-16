@@ -1,7 +1,7 @@
 {
-    "versionCode": 107000,
-    "versionName": "1.7.0",
-    "updateDate": "2023年9月10日",
-    "change": "-优化 UI<br>-新增 设置-显示-灰度<br>-新增 应用商店",
+    "versionCode": 108000,
+    "versionName": "1.8.0",
+    "updateDate": "2023年9月16日",
+    "change": "-新增 设置-开发者选项-API 说明<br>-新增 To Do",
     "spinner": "display: none !important;"
 }
