@@ -55,7 +55,7 @@
         </div>
         <div class="mdui-dialog-actions">
             <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
-            <button class="mdui-btn mdui-ripple" onclick="javascript:add();" id="addBtn" mdui-dialog-close>确认</button>
+            <button class="mdui-btn mdui-ripple" onclick="javascript:add();" id="addBtn">确认</button>
         </div>
     </div>
     <script>
@@ -114,10 +114,15 @@
         }
         //函数：添加任务
         function add() {
-            To_Do.push([document.getElementById("input").value, 0]);
-            localStorage.setItem("To_Do", JSON.stringify(To_Do));
-            postToast("已添加 To Do");
-            freshList();
+            if (document.getElementById("input").value == "") {
+                postToast("请填写内容");
+            } else {
+                To_Do.push([document.getElementById("input").value, 0]);
+                localStorage.setItem("To_Do", JSON.stringify(To_Do));
+                document.getElementsByClassName("mdui-overlay")[0].click();
+                postToast("已添加 To Do");
+                freshList();
+            }
         }
         //函数：切换任务状态
         function switchStatus(index) {

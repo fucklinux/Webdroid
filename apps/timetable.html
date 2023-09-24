@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../mdui-v1.0.1/js/mdui.min.js"></script>
+    <link rel="shortcut icon" href="../images/timetable.png" type="image/x-icon">
+    <title>课程表</title>
+    <style>
+        html {
+            transition-property: opacity;
+            transition: .3s;
+            animation-name: opacity;
+            animation-duration: .3s;
+        }
+
+        @keyframes opacity {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .mdui-list-item-content {
+            word-break: break-word;
+        }
+
+        #saveBtn {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-typo-title mdui-text-color-white">课程表</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '保存'}" onclick="javascript:save();" id="saveBtn">
+                <i class="mdui-icon material-icons">save</i>
+            </a>
+        </div>
+    </div>
+    <div class="mdui-center" style="padding: 16px;max-width: 960px;">
+        <div class="mdui-table-fluid mdui-center">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>节次/星期</th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                        <th>六</th>
+                        <th>日</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "*");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#303F9F";
+            });
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            if (localStorage.getItem("timetable")) {
+                timetable = JSON.parse(localStorage.getItem("timetable"));
+            } else {
+                timetable = [];
+            }
+            loadTimetable();
+            displaySave();
+        };
+        //函数：加载课程表
+        function loadTimetable() {
+            courses = "";
+            for (var i = 0; i < 8; i++) {
+                courses += "<tr>";
+                for (var j = 0; j < 8; j++) {
+                    if (j == 0) {
+                        courses += "<td>" + (i + 1) + "</td>";
+                    } else {
+                        courses += "<td>" + `<div class="mdui-textfield" style="min-width: 32px;"><input class="mdui-textfield-input" type="text" id="` + (i + 1) + "_" + j + `" value="` + (timetable.length == 0 ? "" : timetable[i][j - 1]) + `"/></div>` + "</td>";
+                    }
+                }
+                courses += "</tr>";
+            }
+            document.getElementById("tbody").innerHTML = courses;
+        }
+        //函数：显示保存按钮
+        function displaySave() {
+            for (var i = 1; i < 9; i++) {
+                for (var j = 1; j < 8; j++) {
+                    document.getElementById(i + "_" + j).addEventListener("input", function() {
+                        document.getElementById("saveBtn").style.display = "block";
+                    });
+                }
+            }
+        }
+        //函数：保存课程表
+        function save() {
+            timetable = [];
+            for (var i = 1; i < 9; i++) {
+                var timetable_temp = [];
+                for (var j = 1; j < 8; j++) {
+                    timetable_temp.push(document.getElementById(i + "_" + j).value);
+                }
+                timetable.push(timetable_temp);
+            }
+            localStorage.setItem("timetable", JSON.stringify(timetable));
+            postToast("已保存");
+            document.getElementById("saveBtn").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
