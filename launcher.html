@@ -117,6 +117,7 @@
             z-index: -1;
             opacity: 0;
             max-width: 256px;
+            pointer-events: none;
         }
 
         @keyframes toast {
@@ -235,6 +236,9 @@
             <div class="mdui-ripple mdui-ripple-white navButton" id="navHome">
                 <img src="images/ic_sysbar_home.png">
             </div>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white navButton" style="position: fixed;right: 0;width: 48px;float: right;" id="devTools">
+                <i class="mdui-icon material-icons">build</i>
+            </button>
         </div>
     </div>
     <div class="mdui-container mdui-center" style="padding-top: 28px;padding-left: 16px;padding-right: 16px;max-width: 640px;">
@@ -334,6 +338,7 @@
             setAppList();
             freshApps();
             getGrayscale();
+            getDevTools();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -357,6 +362,7 @@
             gebi("statusBar").style.color = textColor1;
             gebi("navBar").style.color = textColor2;
             opened = 1;
+            getDevTools();
         }
         //事件：主页键被点击
         gebi("navHome").onclick = function() {
@@ -370,6 +376,7 @@
             gebi("navBar").style.color = "";
             document.title = "Launcher";
             opened = 0;
+            getDevTools();
         };
         //事件：返回键被点击
         gebi("navBack").onclick = function() {
@@ -436,27 +443,39 @@
             switch (getData.type) {
                 //API：发送 Toast
                 case "toast":
-                    toast(getData.message);
+                    if (localStorage.getItem("API_postToast") == 1) {
+                        toast(getData.message);
+                    }
                     break;
                     //API：发送通知
                 case "notification":
-                    notice(getData.icon, getData.title, getData.content, getData.clickFunc);
+                    if (localStorage.getItem("API_postNotification") == 1) {
+                        notice(getData.icon, getData.title, getData.content, getData.clickFunc);
+                    }
                     break;
                     //API：执行 JavaScript 脚本
                 case "JavaScript":
-                    eval('(' + getData.script + ')();');
+                    if (localStorage.getItem("API_postScript") == 1) {
+                        eval('(' + getData.script + ')();');
+                    }
                     break;
                     //API：应用跳转
                 case "jumpApp":
-                    launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    if (localStorage.getItem("API_jumpApp") == 1) {
+                        launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    }
                     break;
                     //API：添加应用
                 case "addApp":
-                    addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    if (localStorage.getItem("API_addApp") == 1) {
+                        addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    }
                     break;
                     //API：移除应用
                 case "removeApp":
-                    removeApp(getData.index);
+                    if (localStorage.getItem("API_removeApp") == 1) {
+                        removeApp(getData.index);
+                    }
             }
         }, false);
         //事件：屏幕方向改变
@@ -499,6 +518,16 @@
         if (!localStorage.getItem("grayscale")) {
             localStorage.setItem("grayscale", 0);
         }
+        if (!localStorage.getItem("displayDevTools")) {
+            localStorage.setItem("displayDevTools", 0);
+        }
+        //API 控制设置
+        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_jumpApp", "API_addApp", "API_removeApp"];
+        APIs.forEach(function(item) {
+            if (!localStorage.getItem(item)) {
+                localStorage.setItem(item, 1);
+            }
+        });
         //设置是否已提示“电池电量不足”
         batteryAlerted = 0;
         //函数：获取电池信息
@@ -697,7 +726,21 @@
                 </div>`;
             });
         }
+        //事件：调试面板按钮被点击
+        gebi("devTools").onclick = function() {
+            gebi("iframe").src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
+            toast("已在嵌入页载入调试面板");
+        };
+        //函数：获取调试面板按钮显示设置
+        function getDevTools() {
+            if (localStorage.getItem("displayDevTools") == 1 && opened == 1) {
+                gebi("devTools").style.display = "inline-block";
+            } else {
+                gebi("devTools").style.display = "none";
+            }
+        }
     </script>
+    <script src="eruda/eruda.js"></script>
     <script src="update.js"></script>
 </body>
 

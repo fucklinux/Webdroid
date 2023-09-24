@@ -52,10 +52,30 @@
             </div>
         </li>
         <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" mdui-dialog="{target: '#APIController'}">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">API 控制</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:postScript(function (){ eruda.init(); });postToast('已载入');">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">载入 Eruda 调试面板</div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
         <li class="mdui-list-item mdui-ripple">
             <div class="mdui-list-item-content">系统更新通知</div>
             <label class="mdui-switch">
                 <input type="checkbox" onclick="javascript:updateNotification();" id="updateNotification" />
+                <i class="mdui-switch-icon mdui-text-color-theme"></i>
+            </label>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">导航栏显示调试面板按钮</div>
+            <label class="mdui-switch">
+                <input type="checkbox" onclick="javascript:displayDevTools();" id="displayDevTools" />
                 <i class="mdui-switch-icon mdui-text-color-theme"></i>
             </label>
         </li>
@@ -90,6 +110,59 @@
         <div class="mdui-dialog-actions">
             <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
             <button class="mdui-btn mdui-ripple" onclick="javascript:setCustomHTML();" mdui-dialog-close>确认</button>
+        </div>
+    </div>
+    <div class="mdui-dialog" id="APIController">
+        <div class="mdui-dialog-title">API 控制</div>
+        <div class="mdui-dialog-content">
+            <p>选中的 API 将会启用。</p>
+            <div class="mdui-list">
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_postToast" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">发送 Toast</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_postNotification" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">发送通知</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_postScript" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">执行 JavaScript 脚本</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_jumpApp" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">应用跳转</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_addApp" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">添加应用</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_removeApp" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">移除应用</div>
+                </label>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>完成</button>
         </div>
     </div>
     <script>
@@ -176,8 +249,8 @@
         }
         //事件：对话框打开完成
         document.getElementById("customHTML").addEventListener("opened.mdui.dialog", function() {
-            document.getElementById("HTMLInput").focus();
             document.getElementById("HTMLInput").value = localStorage.getItem("customHTML");
+            document.getElementById("HTMLInput").focus();
         });
         //获取系统更新通知设置
         if (localStorage.getItem("updateNotification") == 1) {
@@ -194,6 +267,38 @@
                 });
             }
         }
+        //获取导航栏调试面板按钮显示设置
+        if (localStorage.getItem("displayDevTools") == 1) {
+            document.getElementById("displayDevTools").checked = true;
+        }
+        //函数：设置导航栏是否显示调试面板按钮
+        function displayDevTools() {
+            if (localStorage.getItem("displayDevTools") == 1) {
+                localStorage.setItem("displayDevTools", 0);
+                postScript(function() {
+                    getDevTools();
+                });
+            } else {
+                localStorage.setItem("displayDevTools", 1);
+                postScript(function() {
+                    getDevTools();
+                });
+            }
+        }
+        //获取 API 控制设置 & 设置 API 控制
+        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_jumpApp", "API_addApp", "API_removeApp"];
+        APIs.forEach(function(item) {
+            if (localStorage.getItem(item) == 1) {
+                document.getElementById(item).checked = "checked";
+            }
+            document.getElementById(item).onclick = function() {
+                if (localStorage.getItem(item) == 1) {
+                    localStorage.setItem(item, 0);
+                } else {
+                    localStorage.setItem(item, 1);
+                }
+            }
+        });
     </script>
 </body>
 
