@@ -1,7 +1,7 @@
 {
-    "versionCode": 108000,
-    "versionName": "1.8.0",
-    "updateDate": "2023年9月16日",
-    "change": "-新增 设置-开发者选项-API 说明<br>-新增 To Do",
+    "versionCode": 109000,
+    "versionName": "1.9.0",
+    "updateDate": "2023年9月24日",
+    "change": "-新增 课程表<br>-新增 设置-开发者选项-API 控制<br>-新增 设置-开发者选项-载入 Eruda 调试面板<br>-新增 导航栏-调试面板按钮（在 设置-开发者选项 中启用），点击后可在嵌入页载入调试面板",
     "spinner": "display: none !important;"
 }

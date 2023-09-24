@@ -27,6 +27,16 @@
         "textColor1": "#fff",
         "textColor2": "#fff",
         "description": "由 Burger Studio 开发的任务清单，需要 Webdroid 1.8.0 及以上版本。"
+    },
+    {
+        "icon": "images/timetable.png",
+        "name": "课程表",
+        "url": "apps/timetable.html",
+        "color1": "#303F9F",
+        "color2": "#000",
+        "textColor1": "#fff",
+        "textColor2": "#fff",
+        "description": "由 Burger Studio 开发的课程表，需要 Webdroid 1.9.0 及以上版本。"
     }, {
         "icon": "images/NetEaseMusic.png",
         "name": "网易云音乐",
