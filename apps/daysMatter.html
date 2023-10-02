@@ -141,7 +141,7 @@
         //函数：添加倒数日
         function add() {
             if (document.getElementById("iTitle").value == "" || document.getElementById("iContent").value == "" || document.getElementById("iDate").value == "") {
-                postToast("请填写内容");
+                postToast("请将表单填充完整");
             } else {
                 daysMatter.push([document.getElementById("iTitle").value, document.getElementById("iContent").value, document.getElementById("iDate").value]);
                 localStorage.setItem("daysMatter", JSON.stringify(daysMatter));
