@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../mdui-v1.0.1/js/mdui.min.js"></script>
+    <link rel="shortcut icon" href="../images/daysMatter.png" type="image/x-icon">
+    <title>倒数日</title>
+    <style>
+        html {
+            transition-property: opacity;
+            transition: .3s;
+            animation-name: opacity;
+            animation-duration: .3s;
+        }
+
+        @keyframes opacity {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .mdui-card {
+            margin-bottom: 32px;
+            transition: .3s;
+        }
+
+        .mdui-card:hover {
+            -webkit-box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 12px 17px 2px rgba(0, 0, 0, 0.14), 0 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 12px 17px 2px rgba(0, 0, 0, 0.14), 0 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-typo-title mdui-text-color-white">倒数日</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '刷新'}" onclick="javascript:freshList();">
+                <i class="mdui-icon material-icons">refresh</i>
+            </a>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '新建'}" mdui-dialog="{target: '#add'}">
+                <i class="mdui-icon material-icons">add</i>
+            </a>
+        </div>
+    </div>
+    <div class="mdui-center" style="padding: 16px;max-width: 640px;" id="list">
+    </div>
+    <div style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -114514;" class="mdui-valign">
+        <div style="width: 100%;text-align: center;" id="none">没有任何倒数日</div>
+    </div>
+    <div class="mdui-dialog" id="add">
+        <div class="mdui-dialog-title">添加倒数日</div>
+        <div class="mdui-dialog-content">
+            <form onsubmit="return false;">
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">标题</label>
+                    <input class="mdui-textfield-input" type="text" id="iTitle" />
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">内容</label>
+                    <input class="mdui-textfield-input" type="text" id="iContent" />
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">日期</label>
+                    <input class="mdui-textfield-input" type="date" id="iDate" />
+                </div>
+            </form>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple" onclick="javascript:add();" id="addBtn">确认</button>
+        </div>
+    </div>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#303F9F";
+            });
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            freshList();
+        };
+        //函数：刷新倒数日列表
+        function freshList() {
+            if (!localStorage.getItem("daysMatter") || localStorage.getItem("daysMatter") == "[]") {
+                document.getElementById("none").style.display = "block";
+                daysMatter = [];
+            } else {
+                document.getElementById("none").style.display = "none";
+                daysMatter = JSON.parse(localStorage.getItem("daysMatter"));
+                document.getElementById("list").innerHTML = "";
+                daysMatter.forEach(function(item, index) {
+                    var days = Math.floor(((new Date(item[2]) - new Date()) / 1000 / 60 / 60 / 24)) + 1;
+                    document.getElementById("list").innerHTML += `
+                    <div class="mdui-card mdui-shadow-6" style="opacity: ` + (days < 0 ? .5 : 1) + `;">
+                        <div class="mdui-card-primary">
+                            <div class="mdui-card-primary-title mdui-text-center">` + days + ` 天</div>
+                            <div class="mdui-card-primary-subtitle mdui-text-center">` + item[0] + `</div>
+                        </div>
+                        <div class="mdui-card-content">` + item[1] + `</div>
+                        <div class="mdui-card-actions">
+                            <button class="mdui-btn mdui-btn-icon mdui-float-right mdui-ripple" onclick="javascript:remove(` + index + `);">
+                                <i class="mdui-icon material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>`;
+                });
+            }
+        }
+        //函数：添加倒数日
+        function add() {
+            if (document.getElementById("iTitle").value == "" || document.getElementById("iContent").value == "" || document.getElementById("iDate").value == "") {
+                postToast("请填写内容");
+            } else {
+                daysMatter.push([document.getElementById("iTitle").value, document.getElementById("iContent").value, document.getElementById("iDate").value]);
+                localStorage.setItem("daysMatter", JSON.stringify(daysMatter));
+                document.getElementsByClassName("mdui-overlay")[0].click();
+                postToast("已添加倒数日");
+                freshList();
+            }
+        }
+        //函数：移除倒数日
+        function remove(index) {
+            mdui.confirm('这将使您丢失它的全部数据，包括标题、内容和日期。', '移除此倒数日？', function() {
+                daysMatter.splice(index, 1);
+                localStorage.setItem("daysMatter", JSON.stringify(daysMatter));
+                postToast("已移除倒数日");
+                freshList();
+            }, undefined, {
+                "confirmText": "确认",
+                "cancelText": "取消"
+            });
+        }
+        //事件：对话框打开完成
+        document.getElementById("add").addEventListener("opened.mdui.dialog", function() {
+            document.getElementById("iTitle").value = "";
+            document.getElementById("iContent").value = "";
+            document.getElementById("iDate").value = "";
+            document.getElementById("iTitle").focus();
+        });
+    </script>
+</body>
+
+</html>
