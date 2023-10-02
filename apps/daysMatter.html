@@ -113,13 +113,13 @@
         };
         //函数：刷新倒数日列表
         function freshList() {
+            document.getElementById("list").innerHTML = "";
             if (!localStorage.getItem("daysMatter") || localStorage.getItem("daysMatter") == "[]") {
                 document.getElementById("none").style.display = "block";
                 daysMatter = [];
             } else {
                 document.getElementById("none").style.display = "none";
                 daysMatter = JSON.parse(localStorage.getItem("daysMatter"));
-                document.getElementById("list").innerHTML = "";
                 daysMatter.forEach(function(item, index) {
                     var days = Math.floor(((new Date(item[2]) - new Date()) / 1000 / 60 / 60 / 24)) + 1;
                     document.getElementById("list").innerHTML += `
