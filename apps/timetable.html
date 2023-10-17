@@ -144,6 +144,44 @@
             postToast("已保存");
             document.getElementById("saveBtn").style.display = "none";
         }
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+        }
+        //以下为实验性功能
+        function test() {
+            return "实验性功能：\n1. 导出课程表：exportTimetable()\n2. 导入课程表（覆盖现有）：importTimetable(数据内容)\n3. 清除课程表：clearTimetable()";
+        }
+
+        function exportTimetable() {
+            copyHandle(JSON.stringify(timetable));
+            console.log(JSON.stringify(timetable));
+            return "已复制到剪贴板";
+        }
+
+        function importTimetable(data) {
+            if (data == undefined) {
+                return "缺失数据内容";
+            } else {
+                timetable = data;
+                localStorage.setItem("timetable", JSON.stringify(timetable));
+                loadTimetable();
+                return "已导入课程表";
+            }
+        }
+
+        function clearTimetable() {
+            timetable = [];
+            localStorage.setItem("timetable", JSON.stringify(timetable));
+            loadTimetable();
+            return "已清除课程表";
+        }
     </script>
 </body>
 

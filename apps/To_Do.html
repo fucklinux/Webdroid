@@ -93,7 +93,7 @@
         };
         //函数：刷新任务列表
         function freshList() {
-            if (localStorage.getItem("To_Do")) {
+            if (localStorage.getItem("To_Do") && localStorage.getItem("To_Do") != "[]") {
                 document.getElementById("none").style.display = "none";
                 To_Do = JSON.parse(localStorage.getItem("To_Do"));
                 document.getElementById("list").innerHTML = "";
@@ -108,6 +108,7 @@
                     </label>`;
                 });
             } else {
+                document.getElementById("list").innerHTML = "";
                 document.getElementById("none").style.display = "block";
                 To_Do = [];
             }
@@ -147,6 +148,54 @@
                 document.getElementById("addBtn").click();
             }
         });
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+        }
+        //以下为实验性功能
+        function test() {
+            return "实验性功能：\n1. 导出全部 To Do：exportToDo()\n2. 导入 To Do（覆盖现有）：importToDo(数据内容)\n3. 移除指定 To Do：removeToDo(index)\n（index 为欲移除 To Do 的序号，从 0 开始计算。）\n4. 清除全部 To Do：clearToDo()";
+        }
+
+        function exportToDo() {
+            copyHandle(JSON.stringify(To_Do));
+            console.log(JSON.stringify(To_Do));
+            return "已复制到剪贴板";
+        }
+
+        function importToDo(data) {
+            if (data == undefined) {
+                return "缺失数据内容";
+            } else {
+                localStorage.setItem("To_Do", JSON.stringify(data));
+                freshList();
+                return "已导入 To Do";
+            }
+        }
+
+        function removeToDo(index) {
+            if (index == undefined) {
+                return "缺失欲移除 To Do 的序号";
+            } else {
+                To_Do.splice(index, 1);
+                localStorage.setItem("To_Do", JSON.stringify(To_Do));
+                freshList();
+                return "已移除该 To Do";
+            }
+        }
+
+        function clearToDo() {
+            To_Do = [];
+            localStorage.setItem("To_Do", JSON.stringify(To_Do));
+            freshList();
+            return "已清除全部 To Do";
+        }
     </script>
 </body>
 

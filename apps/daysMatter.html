@@ -121,7 +121,8 @@
                 document.getElementById("none").style.display = "none";
                 daysMatter = JSON.parse(localStorage.getItem("daysMatter"));
                 daysMatter.forEach(function(item, index) {
-                    var days = Math.floor(((new Date(item[2]) - new Date()) / 1000 / 60 / 60 / 24)) + 1;
+                    var date2 = new Date(item[2]).setHours(0);
+                    var days = Math.floor(((date2 - new Date()) / 1000 / 60 / 60 / 24)) + 1;
                     document.getElementById("list").innerHTML += `
                     <div class="mdui-card mdui-shadow-6" style="opacity: ` + (days < 0 ? .5 : 1) + `;">
                         <div class="mdui-card-primary">
@@ -169,6 +170,44 @@
             document.getElementById("iDate").value = "";
             document.getElementById("iTitle").focus();
         });
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+        }
+        //以下为实验性功能
+        function test() {
+            return "实验性功能：\n1. 导出倒数日：exportDaysMatter()\n2. 导入倒数日（覆盖现有）：importDaysMatter(数据内容)\n3. 清除全部倒数日：clearDaysMatter()";
+        }
+
+        function exportDaysMatter() {
+            copyHandle(JSON.stringify(daysMatter));
+            console.log(JSON.stringify(daysMatter));
+            return "已复制到剪贴板";
+        }
+
+        function importDaysMatter(data) {
+            if (data == undefined) {
+                return "缺失数据内容";
+            } else {
+                daysMatter = data;
+                localStorage.setItem("daysMatter", JSON.stringify(daysMatter));
+                freshList();
+                return "已导入倒数日";
+            }
+        }
+
+        function clearDaysMatter() {
+            daysMatter = [];
+            localStorage.setItem("daysMatter", JSON.stringify(daysMatter));
+            freshList();
+            return "已清除全部倒数日";
+        }
     </script>
 </body>
 
