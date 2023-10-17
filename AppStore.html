@@ -101,8 +101,11 @@
                     document.getElementById("spinner").style.display = "none";
                 }
             };
-            getAppData.open("GET", "https://bgdroid.netlify.app/apps.json", true);
+            getAppData.open("GET", localStorage.getItem("appSource"), true);
             getAppData.send();
+            if (!localStorage.getItem("appSource")) {
+                setSource("default");
+            }
         };
         //函数：刷新应用列表
         function freshAppList() {
@@ -118,6 +121,25 @@
                     <i class="mdui-list-item-icon mdui-icon material-icons" onclick='javascript:addApp("` + item.icon + `", "` + item.name + `", "` + item.url + `", "` + item.color1 + `", "` + item.color2 + `", "` + item.textColor1 + `", "` + item.textColor2 + `");'>add</i>
                 </li>`;
             });
+        }
+        //以下为实验性功能
+        function test() {
+            return "实验性功能：\n1. 设置应用商店数据源：setSource()";
+        }
+
+        function setSource(source) {
+            if (source == undefined) {
+                return "用法：\n1. 设置为默认源：setSource(\"default\")\n2. 设置为本地源：setSource(\"local\")\n3. 设置为自定义源：setSource(数据源 URL)";
+            } else {
+                if (source == "default") {
+                    localStorage.setItem("appSource", "https://bgdroid.netlify.app/apps.json");
+                } else if (source == "local") {
+                    localStorage.setItem("appSource", "json/apps.json");
+                } else {
+                    localStorage.setItem("appSource", source);
+                }
+                return "设置完成，重新启动应用商店以生效。";
+            }
         }
     </script>
 </body>

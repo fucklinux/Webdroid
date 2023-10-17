@@ -728,8 +728,12 @@
         }
         //事件：调试面板按钮被点击
         gebi("devTools").onclick = function() {
-            gebi("iframe").src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
-            toast("已在嵌入页载入调试面板");
+            if (navigator.onLine) {
+                gebi("iframe").src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
+                toast("正在向嵌入页载入调试面板");
+            } else {
+                toast("当前处于离线状态");
+            }
         };
         //函数：获取调试面板按钮显示设置
         function getDevTools() {

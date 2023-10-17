@@ -47,6 +47,16 @@
         "textColor1": "#fff",
         "textColor2": "#fff",
         "description": "由 Burger Studio 开发的倒数日，需要 Webdroid 1.10.0 及以上版本。"
+    },
+    {
+        "icon": "images/calc.png",
+        "name": "计算器",
+        "url": "apps/calc.html",
+        "color1": "#fff",
+        "color2": "#000",
+        "textColor1": "#000",
+        "textColor2": "#fff",
+        "description": "由 Burger Studio 开发的计算器，需要 Webdroid 1.11.0 及以上版本。"
     }, {
         "icon": "images/NetEaseMusic.png",
         "name": "网易云音乐",
