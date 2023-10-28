@@ -1,7 +1,7 @@
 {
-    "versionCode": 231017,
-    "versionName": "1.11.0",
-    "updateDate": "2023年10月17日",
-    "change": "-新增 计算器<br>-新增 部分应用中的实验性功能，可在嵌入页的调试面板中执行“test()”来查看<br>-新增 向嵌入页面载入调试面板时检测浏览器在线状态",
+    "versionCode": 231028,
+    "versionName": "1.12.0",
+    "updateDate": "2023年10月28日",
+    "change": "-新增 点阵显示器<br>-优化 设置-关于设备 中的应用跳转动画<br>-修复 导入课程表后保存按钮不显示的问题",
     "spinner": "display: none !important;"
 }

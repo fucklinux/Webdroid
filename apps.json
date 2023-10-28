@@ -57,6 +57,16 @@
         "textColor1": "#000",
         "textColor2": "#fff",
         "description": "由 Burger Studio 开发的计算器，需要 Webdroid 1.11.0 及以上版本。"
+    },
+    {
+        "icon": "images/latticeScreen.png",
+        "name": "点阵显示器",
+        "url": "apps/latticeScreen/index.html",
+        "color1": "#303F9F",
+        "color2": "#000",
+        "textColor1": "#fff",
+        "textColor2": "#fff",
+        "description": "由 Burger Studio 开发的点阵显示器，需要 Webdroid 1.12.0 及以上版本。"
     }, {
         "icon": "images/NetEaseMusic.png",
         "name": "网易云音乐",
