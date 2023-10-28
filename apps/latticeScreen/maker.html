@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="../../images/latticeScreen.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>点阵造字器</title>
+    <style>
+        html {
+            transition-property: opacity, transform;
+            transition: .3s;
+            animation-name: slideIn;
+            animation-duration: .3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(50%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        #screen {
+            width: 320px;
+            height: 320px;
+            margin-left: calc(50% - 164px);
+            margin-top: 16px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 4px;
+        }
+
+        .block {
+            width: 18px;
+            height: 18px;
+            background-color: #666;
+            display: inline-block;
+            margin: 1px;
+            vertical-align: top;
+            transition: background-color .3s;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('index.html');">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">点阵造字器</a>
+        </div>
+    </div>
+    <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-center" style="margin-top: 16px;" onclick="javascript:copyHandle(JSON.stringify(result));postToast('已复制造字结果');">复制结果</button>
+    <div id="screen"></div>
+    <script>
+        //函数：页面跳转
+        function openPage(url) {
+            document.documentElement.style.transform = "translateX(-50%)";
+            document.documentElement.style.opacity = 0;
+            window.setTimeout(function() {
+                location.href = url;
+            }, 300);
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#303F9F";
+            });
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        result = [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ];
+        window.onload = function() {
+            createBlocks();
+        };
+
+        function createBlocks() {
+            for (var i = 1; i < 17; i++) {
+                for (var j = 1; j < 17; j++) {
+                    var block = document.createElement("div");
+                    block.classList.add("block");
+                    block.id = "block_" + i + "_" + j;
+                    document.getElementById("screen").appendChild(block);
+                    (function(i, j) {
+                        block.onclick = function() {
+                            if (result[i - 1].indexOf(j) == -1) {
+                                result[i - 1].push(j);
+                                result[i - 1].sort();
+                                this.style.backgroundColor = "#fff";
+                            } else {
+                                result[i - 1].splice(result[i - 1].indexOf(j), 1);
+                                this.style.backgroundColor = "#666";
+                            }
+                        };
+                    })(i, j);
+                }
+            }
+        }
+
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+        }
+    </script>
+</body>
+
+</html>
