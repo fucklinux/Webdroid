@@ -9,25 +9,6 @@
     <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
     <title>函数图象</title>
     <style>
-        html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
         #screen {
             width: 320px;
             height: 320px;
@@ -48,35 +29,50 @@
             vertical-align: top;
             transition: background-color .3s;
         }
+
+        .mdui-btn {
+            border-radius: 32px;
+        }
+
+        .mdui-textfield-input {
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 4px 4px 0 0;
+            padding: 8px;
+        }
+
+        .mdui-theme-layout-dark .mdui-textfield-input {
+            background-color: rgba(255, 255, 255, .1);
+        }
     </style>
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('index.html');">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </a>
             <a class="mdui-typo-title">函数图象</a>
         </div>
     </div>
     <div class="mdui-text-center">
-        <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;" id="switchClear">绘制前清除：开</button>
-        <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;" id="switchXy">显示坐标轴：开</button>
-        <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;" id="drawBtn">绘制</button>
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;" id="switchClear">绘制前清除：开</button>
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;margin-left: 16px;" id="switchXy">显示坐标轴：开</button>
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;margin-left: 16px;" id="drawBtn">绘制</button>
         <div class="mdui-textfield">y = <input class="mdui-textfield-input" type="text" id="funcInput" style="width: 256px;display: inline-block;" /></div>
-        <div class="mdui-textfield" style="display: inline-block;">颜色：<input class="mdui-textfield-input" type="text" id="colorInput" value="#ffffff" style="width: 64px;display: inline-block;" type="color" /></div>
+        <div class="mdui-textfield" style="display: inline-block;">颜色：<input class="mdui-textfield-input" type="color" id="colorInput" value="#ffffff" style="width: 64px;display: inline-block;transform: translateY(4px);" type="color" /></div>
         <div class="mdui-textfield" style="display: inline-block;margin-left: 16px;">精度：<input class="mdui-textfield-input" type="text" id="acc" value="0.01" style="width: 64px;display: inline-block;" type="number" /></div>
     </div>
     <div id="screen"></div>
     <script>
-        //函数：页面跳转
-        function openPage(url) {
-            document.documentElement.style.transform = "translateX(-50%)";
-            document.documentElement.style.opacity = 0;
-            window.setTimeout(function() {
-                location.href = url;
-            }, 300);
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
         }
         //接入 API：执行 JavaScript 脚本
         function postScript(script) {
@@ -92,10 +88,12 @@
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#303F9F";
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //接入 API：发送 Toast

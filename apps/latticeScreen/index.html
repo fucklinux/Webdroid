@@ -9,63 +9,81 @@
     <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
     <title>点阵显示器</title>
     <style>
-        html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
+        .card-list {
+            background: #E8EAF6;
+            margin: 4px;
+            border-radius: 16px;
+            width: 45%;
+            height: 128px;
+            display: inline-block;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
+        .card-list i {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            font-size: 28px;
+        }
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .card-list-content {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            font-size: 18px;
+            color: #3F51B5;
+        }
+
+        .mdui-theme-layout-dark .card-list {
+            background: #434343;
+        }
+
+        .mdui-theme-layout-dark .card-list i {
+            color: #fff !important;
+        }
+
+        .mdui-theme-layout-dark .card-list-content {
+            color: #fff;
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
             <a class="mdui-typo-title">点阵显示器</a>
         </div>
     </div>
-    <ul class="mdui-list mdui-center" style="max-width: 640px;">
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('Burger.html');">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
-            <div class="mdui-list-item-content">像素画</div>
-        </li>
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('maker.html');">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
-            <div class="mdui-list-item-content">点阵造字器</div>
-        </li>
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('clock.html');">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
-            <div class="mdui-list-item-content">时钟</div>
-        </li>
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('noise.html');">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
-            <div class="mdui-list-item-content">白噪声</div>
-        </li>
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('function.html');">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
-            <div class="mdui-list-item-content">函数图象</div>
-        </li>
-    </ul>
+    <div class="mdui-center" style="max-width: 640px;text-align: center;margin-top: 16px;">
+        <div class="mdui-ripple card-list" onclick="javascript:switchActivity('apps/latticeScreen/Burger.html');">
+            <i class="mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
+            <div class="card-list-content">像素画</div>
+        </div>
+        <div class="mdui-ripple card-list" onclick="javascript:switchActivity('apps/latticeScreen/maker.html');">
+            <i class="mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
+            <div class="card-list-content">点阵造字器</div>
+        </div>
+        <div class="mdui-ripple card-list" onclick="javascript:switchActivity('apps/latticeScreen/clock.html');">
+            <i class="mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
+            <div class="card-list-content">时钟</div>
+        </div>
+        <div class="mdui-ripple card-list" onclick="javascript:switchActivity('apps/latticeScreen/noise.html');">
+            <i class="mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
+            <div class="card-list-content">白噪声</div>
+        </div>
+        <div class="mdui-ripple card-list" onclick="javascript:switchActivity('apps/latticeScreen/function.html');">
+            <i class="mdui-icon material-icons mdui-text-color-theme">arrow_forward</i>
+            <div class="card-list-content">函数图象</div>
+        </div>
+    </div>
     <script>
-        //函数：页面跳转
-        function openPage(url) {
-            document.documentElement.style.transform = "translateX(-50%)";
-            document.documentElement.style.opacity = 0;
-            window.setTimeout(function() {
-                location.href = url;
-            }, 300);
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
         }
         //接入 API：执行 JavaScript 脚本
         function postScript(script) {
@@ -81,10 +99,12 @@
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#303F9F";
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
             });
         }
     </script>
