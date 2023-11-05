@@ -9,37 +9,64 @@
     <script src="mdui-v1.0.1/js/mdui.min.js"></script>
     <title>通讯录</title>
     <style>
-        html {
-            transition-property: opacity;
-            transition: .3s;
-            animation-name: opacity;
-            animation-duration: .3s;
+        .mdui-btn {
+            border-radius: 32px;
         }
 
-        @keyframes opacity {
-            from {
-                opacity: 0;
-            }
+        .mdui-tab a::before {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: ' ';
+            border-radius: 32px;
+            transform: scale(0, .75);
+            transition: .2s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
 
-            to {
-                opacity: 1;
-            }
+        a.mdui-tab-active::before {
+            background: rgba(0, 0, 0, .2);
+            transform: scale(.75, .75);
+        }
+
+        .mdui-tab a:active::before {
+            background: rgba(0, 0, 0, .2);
+            transform: scale(.75, .75);
+        }
+
+        .mdui-tab-indicator {
+            display: none;
+        }
+
+        .mdui-theme-layout-dark a.mdui-tab-active::before {
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .mdui-theme-layout-dark .mdui-tab a:active::before {
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .mdui-fab {
+            border-radius: 16px;
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-light-blue mdui-theme-accent-blue mdui-appbar-with-toolbar mdui-appbar-with-tab">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme-700">
-            <a class="mdui-typo-title mdui-text-color-white">通讯录</a>
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-typo-title mdui-text-color">通讯录</a>
         </div>
-        <div class="mdui-tab mdui-color-theme-700" mdui-tab>
-            <a class="mdui-ripple mdui-ripple-white">收藏</a>
-            <a class="mdui-ripple mdui-ripple-white">全部</a>
-            <a class="mdui-ripple mdui-ripple-white">组</a>
+        <div class="mdui-tab mdui-color-theme-50 mdui-row-xs-3" mdui-tab>
+            <a class="mdui-col">收藏</a>
+            <a class="mdui-col">全部</a>
+            <a class="mdui-col">组</a>
         </div>
     </div>
-    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent">
+    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent mdui-shadow-3">
         <i class="mdui-icon material-icons mdui-text-color-white">person_add</i>
     </button>
     <div id="content" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -114514;" class="mdui-valign">
@@ -63,10 +90,12 @@
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#01579B";
+                gebi("statusBar").style.background = "#E3F2FD";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //事件：切换选项
@@ -83,8 +112,8 @@
                 <p style="font-size: 18px;">没有联系人</p>
                 </div>
                 <br>
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">添加账号</button><br><br>
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">导入联系人</button>
+                <button class="mdui-btn mdui-ripple mdui-color-theme-accent">添加账号</button><br><br>
+                <button class="mdui-btn mdui-ripple mdui-color-theme-accent">导入联系人</button>
                 </div>`;
             } else {
                 document.getElementById("content").innerHTML = `<div style="text-align: center;width: 100%;">
@@ -93,8 +122,8 @@
                 <p style="font-size: 18px;">没有任何群组。</p>
                 </div>
                 <br>
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">添加账号</button><br><br>
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">导入联系人</button>
+                <button class="mdui-btn mdui-ripple mdui-color-theme-accent">添加账号</button><br><br>
+                <button class="mdui-btn mdui-ripple mdui-color-theme-accent">导入联系人</button>
                 </div>`;
             }
         });

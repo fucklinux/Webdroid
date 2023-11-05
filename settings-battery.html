@@ -8,32 +8,12 @@
     <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
     <script src="mdui-v1.0.1/js/mdui.min.js"></script>
     <title>电池</title>
-    <style>
-        html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    </style>
 </head>
 
 <body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings.html');">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </a>
             <a class="mdui-typo-title">电池</a>
@@ -69,23 +49,26 @@
         </li>
     </ul>
     <script>
-        //函数：页面跳转
-        function openPage(url) {
-            document.documentElement.style.transform = "translateX(-50%)";
-            document.documentElement.style.opacity = 0;
-            window.setTimeout(function() {
-                location.href = url;
-            }, 300);
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
         }
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#455A64";
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //函数：时间转换

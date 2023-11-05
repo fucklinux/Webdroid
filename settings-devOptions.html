@@ -9,31 +9,65 @@
     <script src="mdui-v1.0.1/js/mdui.min.js"></script>
     <title>开发者选项</title>
     <style>
-        html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #ECEFF1;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
+        }
+
+        .mdui-switch-icon {
+            transform: scale(2) translateX(-4px);
+            width: 28px;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-switch-icon::before {
+            width: 10px;
+            height: 10px;
+            transform: translate(4.5px, 5px);
+            box-shadow: 0 0 !important;
+            -webkit-box-shadow: 0 0 !important;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background-color: #fff !important;
+        }
+
+        .mdui-switch input[type="checkbox"]:checked+.mdui-switch-icon {
+            background-color: #448AFF !important;
+        }
+
+        .mdui-switch input[type="checkbox"]:checked+.mdui-switch-icon::before {
+            left: 12px;
+        }
+
+        .mdui-textfield-input {
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 4px 4px 0 0;
+            padding: 8px;
+        }
+
+        .mdui-theme-layout-dark .mdui-textfield-input {
+            background-color: rgba(255, 255, 255, .1);
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings.html');">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </a>
             <a class="mdui-typo-title">开发者选项</a>
@@ -46,7 +80,7 @@
             </div>
         </li>
         <li class="mdui-divider mdui-m-y-0"></li>
-        <li class="mdui-list-item mdui-ripple" onclick="javascript:openPage('settings-APIs.html');">
+        <li class="mdui-list-item mdui-ripple" onclick="javascript:switchActivity('settings-APIs.html');">
             <div class="mdui-list-item-content">
                 <div class="mdui-list-item-title">API 说明</div>
             </div>
@@ -140,10 +174,17 @@
                 </label>
                 <label class="mdui-list-item mdui-ripple">
                     <div class="mdui-checkbox">
-                        <input type="checkbox" id="API_jumpApp" />
+                        <input type="checkbox" id="API_switchApp" />
                         <i class="mdui-checkbox-icon"></i>
                     </div>
-                    <div class="mdui-list-item-content">应用跳转</div>
+                    <div class="mdui-list-item-content">切换应用</div>
+                </label>
+                <label class="mdui-list-item mdui-ripple">
+                    <div class="mdui-checkbox">
+                        <input type="checkbox" id="API_switchActivity" />
+                        <i class="mdui-checkbox-icon"></i>
+                    </div>
+                    <div class="mdui-list-item-content">切换活动</div>
                 </label>
                 <label class="mdui-list-item mdui-ripple">
                     <div class="mdui-checkbox">
@@ -166,23 +207,26 @@
         </div>
     </div>
     <script>
-        //函数：页面跳转
-        function openPage(url) {
-            document.documentElement.style.transform = "translateX(-50%)";
-            document.documentElement.style.opacity = 0;
-            window.setTimeout(function() {
-                location.href = url;
-            }, 300);
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
         }
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#455A64";
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //接入 API：发送 Toast
@@ -227,7 +271,9 @@
                         onClick: function(inst) {
                             localStorage.setItem("devMode", 0);
                             postToast("开发者选项已禁用");
-                            openPage("settings.html");
+                            postScript(function() {
+                                gebi('navBack').click();
+                            });
                         }
                     }
                 ]
@@ -286,7 +332,7 @@
             }
         }
         //获取 API 控制设置 & 设置 API 控制
-        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_jumpApp", "API_addApp", "API_removeApp"];
+        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_switchApp", "API_switchActivity", "API_addApp", "API_removeApp"];
         APIs.forEach(function(item) {
             if (localStorage.getItem(item) == 1) {
                 document.getElementById(item).checked = "checked";

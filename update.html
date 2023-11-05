@@ -4,33 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="images/update.png" type="image/x-icon">
     <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
     <script src="mdui-v1.0.1/js/mdui.min.js"></script>
     <title>系统更新</title>
     <style>
-        html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
-        }
-
         body {
             background: #4B81DA;
-            transition: .3s !important;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
         }
 
         #card {
@@ -75,6 +55,10 @@
             display: none;
             margin-bottom: 32px;
         }
+
+        .mdui-btn {
+            border-radius: 32px;
+        }
     </style>
 </head>
 
@@ -87,10 +71,10 @@
         <p id="content"></p>
         <br>
         <div id="updateButton">
-            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:update();">更新</button>
+            <button class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:update();">更新</button>
         </div>
         <div id="backButton">
-            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:goBack();">返回</button>
+            <button class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right" onclick="javascript:goBack();">返回</button>
         </div>
         <div id="spinner">
             <div class="mdui-spinner mdui-center"></div>
@@ -123,26 +107,12 @@
             };
             window.parent.postMessage(JSON.stringify(postData), "/");
         }
-        //接入 API：应用跳转
-        function jumpApp(url, color1, color2, textColor1, textColor2) {
-            var postData = {
-                "type": "jumpApp",
-                "url": url,
-                "color1": color1,
-                "color2": color2,
-                "textColor1": textColor1,
-                "textColor2": textColor2
-            };
-            window.parent.postMessage(JSON.stringify(postData), "/");
-            document.body.style.background = "rgba(0, 0, 0, 0)";
-            document.documentElement.style.opacity = 0;
-        }
         //函数：处理更新数据
         function processUpdate() {
             document.getElementById("spinner").style = updateData.spinner;
             document.getElementById("versionName").innerText = "版本名称：" + updateData.versionName;
             document.getElementById("date").innerText = "更新日期：" + updateData.updateDate;
-            document.getElementById("content").innerHTML = "更新内容：<p style='font-size: 16px;'>" + updateData.change + "</p>";
+            document.getElementById("content").innerHTML = "更新内容：<p>" + updateData.change + "</p>";
             //判断是否为最新版本
             if (versionCode < updateData.versionCode) {
                 document.getElementById("title").innerText = "有可用的系统更新";
@@ -164,7 +134,9 @@
         }
         //函数：返回
         function goBack() {
-            jumpApp('settings-aboutDevice.html', '#455A64', '#000', '#fff', '#fff');
+            postScript(function() {
+                gebi('navBack').click();
+            });
         }
     </script>
     <script src="update.js"></script>

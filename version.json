@@ -1,7 +1,7 @@
 {
-    "versionCode": 231028,
-    "versionName": "1.12.0",
-    "updateDate": "2023年10月28日",
-    "change": "-新增 点阵显示器<br>-优化 设置-关于设备 中的应用跳转动画<br>-修复 导入课程表后保存按钮不显示的问题",
+    "versionCode": 231105,
+    "versionName": "2.0.0",
+    "updateDate": "2023年11月5日",
+    "change": "-优化 UI，采用 Material You 设计<br>-新增 应用开屏页面<br>-新增 API：切换活动<br>-修改 API：“应用跳转”重命名为“切换应用”并进行优化<br>-采用双 iframe 轮流工作的方法<br>-新增 活动记录机制，优化 返回键功能效果",
     "spinner": "display: none !important;"
 }

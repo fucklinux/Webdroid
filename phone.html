@@ -9,44 +9,82 @@
     <script src="mdui-v1.0.1/js/mdui.min.js"></script>
     <title>电话</title>
     <style>
-        html {
-            transition-property: opacity;
-            transition: .3s;
-            animation-name: opacity;
-            animation-duration: .3s;
-        }
-
-        @keyframes opacity {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
         .mdui-theme-layout-dark .mdui-bottom-nav {
             background: #212121 !important;
+            color: #fff !important;
+        }
+
+        .mdui-menu {
+            border-radius: 4px;
+            background: #E8EAF6;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-menu-item a {
+            transition: .2s;
+        }
+
+        .mdui-menu-item a:hover {
+            background: rgba(0, 0, 0, .1);
+        }
+
+        .mdui-fab {
+            border-radius: 16px;
+        }
+
+        .mdui-btn {
+            border-radius: 32px;
+        }
+
+        .mdui-bottom-nav a::before {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: ' ';
+            border-radius: 32px;
+            transform: scale(0, 1);
+            transition: .2s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        a.mdui-bottom-nav-active::before {
+            background: rgba(0, 0, 0, .2);
+            transform: scale(1);
+        }
+
+        .mdui-bottom-nav a:active::before {
+            background: rgba(0, 0, 0, .2);
+            transform: scale(1);
+        }
+
+        .mdui-theme-layout-dark a.mdui-bottom-nav-active::before {
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .mdui-theme-layout-dark .mdui-bottom-nav a:active::before {
+            background: rgba(255, 255, 255, .2);
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-blue mdui-bottom-nav-fixed mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
             <i class="mdui-icon material-icons">search</i>
             <div class="mdui-textfield">
-                <input class="mdui-textfield-input" type="text" placeholder="搜素联系人" style="color: #fff;transform: translateY(-4px);" />
+                <input class="mdui-textfield-input" type="text" placeholder="搜素联系人" style="transform: translateY(-4px);" />
             </div>
             <div class="mdui-toolbar-spacer"></div>
-            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+            <button class="mdui-btn mdui-btn-icon mdui-ripple">
                 <i class="mdui-icon material-icons">keyboard_voice</i>
             </button>
-            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-menu="{target: '#menu'}">
+            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: '#menu'}">
                 <i class="mdui-icon material-icons">more_vert</i>
             </button>
-            <ul class="mdui-menu" id="menu">
+            <ul class="mdui-menu mdui-shadow-3" id="menu">
                 <li class="mdui-menu-item">
                     <a class="mdui-ripple">通话记录</a>
                 </li>
@@ -75,19 +113,19 @@
             <button class="mdui-btn mdui-ripple mdui-text-color-theme-accent">收藏联系人</button>
         </div>
     </div>
-    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent" style="transform: translateY(-56px);">
+    <button class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent mdui-shadow-3" style="transform: translateY(-56px);">
         <i class="mdui-icon material-icons">dialpad</i>
     </button>
-    <div class="mdui-bottom-nav mdui-color-theme">
-        <a class="mdui-ripple mdui-ripple-white mdui-bottom-nav-active">
+    <div class="mdui-bottom-nav mdui-color-theme-50 mdui-row-xs-3">
+        <a class="mdui-bottom-nav-active mdui-col">
             <i class="mdui-icon material-icons">star</i>
             <label>快速拨号</label>
         </a>
-        <a class="mdui-ripple mdui-ripple-white">
+        <a class="mdui-col">
             <i class="mdui-icon material-icons">access_time</i>
             <label>通话记录</label>
         </a>
-        <a class="mdui-ripple mdui-ripple-white">
+        <a class="mdui-col">
             <i class="mdui-icon material-icons">people</i>
             <label>通讯录</label>
         </a>
@@ -107,10 +145,12 @@
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#303F9F";
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //事件：切换导航项

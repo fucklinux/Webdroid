@@ -10,31 +10,15 @@
     <title>API 说明</title>
     <style>
         html {
-            transition-property: opacity, transform;
-            transition: .3s;
-            animation-name: slideIn;
-            animation-duration: .3s;
             scroll-behavior: smooth;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(50%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" onclick="javascript:openPage('settings-devOptions.html');">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </a>
             <a class="mdui-typo-title">API 说明</a>
@@ -48,7 +32,8 @@
             <a href="#postToast">发送 Toast</a><br>
             <a href="#postNotification">发送通知</a><br>
             <a href="#postScript">执行 JavaScript 脚本</a><br>
-            <a href="#jumpApp">应用跳转</a><br>
+            <a href="#switchApp">切换应用</a><br>
+            <a href="#switchActivity">切换活动</a><br>
             <a href="#addApp">添加应用</a><br>
             <a href="#removeApp">移除应用</a>
         </blockquote>
@@ -168,18 +153,18 @@ function postScript(script) {
             </table>
         </div>
         <br>
-        <h5 id="jumpApp">应用跳转</h5>
+        <h5 id="switchApp">切换应用</h5>
         <p>加入以下 JavaScript 脚本来使用：</p>
         <pre>
-//接入 API：应用跳转
-function jumpApp(url, color1, color2, textColor1, textColor2) {
+//接入 API：切换应用
+function switchApp(url, color1, color2, textColor, back = false) {
     var postData = {
-        "type": "jumpApp",
+        "type": "switchApp",
         "url": url,
         "color1": color1,
         "color2": color2,
-        "textColor1": textColor1,
-        "textColor2": textColor2
+        "textColor": textColor,
+        "back": back
     };
     window.parent.postMessage(JSON.stringify(postData), "*");
 }
@@ -211,14 +196,52 @@ function jumpApp(url, color1, color2, textColor1, textColor2) {
                         <td>应用导航栏背景色。</td>
                     </tr>
                     <tr>
-                        <td><code>textColor1</code></td>
+                        <td><code>textColor</code></td>
                         <td><code>string</code></td>
                         <td>应用状态栏文本色。</td>
                     </tr>
                     <tr>
-                        <td><code>textColor2</code></td>
+                        <td><code>back</code></td>
+                        <td><code>boolean</code></td>
+                        <td>过渡效果是否为后退。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="switchActivity">切换活动</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre>
+//接入 API：切换活动
+function switchActivity(url, back = false) {
+    var postData = {
+        "type": "switchActivity",
+        "url": url,
+        "back": back
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}
+</pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>url</code></td>
                         <td><code>string</code></td>
-                        <td>应用导航栏文本色。</td>
+                        <td>活动 URL。</td>
+                    </tr>
+                    <tr>
+                        <td><code>back</code></td>
+                        <td><code>boolean</code></td>
+                        <td>过渡效果是否为后退。</td>
                     </tr>
                 </tbody>
             </table>
@@ -228,7 +251,7 @@ function jumpApp(url, color1, color2, textColor1, textColor2) {
         <p>加入以下 JavaScript 脚本来使用：</p>
         <pre>
 //接入 API：添加应用
-function addApp(icon, name, url, color1, color2, textColor1, textColor2) {
+function addApp(icon, name, url, color1, color2, textColor) {
     var postData = {
         "type": "addApp",
         "icon": icon,
@@ -236,8 +259,7 @@ function addApp(icon, name, url, color1, color2, textColor1, textColor2) {
         "url": url,
         "color1": color1,
         "color2": color2,
-        "textColor1": textColor1,
-        "textColor2": textColor2
+        "textColor": textColor
     };
     window.parent.postMessage(JSON.stringify(postData), "*");
 }
@@ -279,14 +301,9 @@ function addApp(icon, name, url, color1, color2, textColor1, textColor2) {
                         <td>应用导航栏背景色。</td>
                     </tr>
                     <tr>
-                        <td><code>textColor1</code></td>
+                        <td><code>textColor</code></td>
                         <td><code>string</code></td>
                         <td>应用状态栏文本色。</td>
-                    </tr>
-                    <tr>
-                        <td><code>textColor2</code></td>
-                        <td><code>string</code></td>
-                        <td>应用导航栏文本色。</td>
                     </tr>
                 </tbody>
             </table>
@@ -325,23 +342,26 @@ function removeApp(index) {
         </div>
     </div>
     <script>
-        //函数：页面跳转
-        function openPage(url) {
-            document.documentElement.style.transform = "translateX(-50%)";
-            document.documentElement.style.opacity = 0;
-            window.setTimeout(function() {
-                location.href = url;
-            }, 300);
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
         }
         //获取深色主题设置
         if (localStorage.getItem("darkTheme") == "true") {
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#455A64";
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //接入 API：发送 Toast

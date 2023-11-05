@@ -57,10 +57,10 @@
             max-width: 100px;
         }
 
-        .navButton img {
+        .navButton svg {
             width: 24px;
             height: 24px;
-            transform: translateY(-7px);
+            transform: translateY(-6.5px);
         }
 
         .icon {
@@ -93,14 +93,16 @@
             font-size: 13px;
         }
 
-        #iframe {
+        iframe {
             border: none;
             position: fixed;
             top: 28px;
             width: 100%;
             height: calc(100% - 76px);
             transform: translateY(calc(100% + 48px));
-            transition: .4s;
+            transition-property: transform, opacity, scale;
+            transition-duration: .4s, .4s, .2s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
             z-index: 9998;
             background: #fff;
         }
@@ -108,14 +110,16 @@
         .toast {
             position: fixed;
             bottom: 96px;
-            background: rgba(64, 64, 64, .85);
-            color: #fff;
+            background: rgba(240, 240, 240, .9);
+            color: #000;
             padding: 16px 24px;
             border-radius: 32px;
             animation-name: toast;
             animation-duration: 5s;
+            animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
             z-index: -1;
             opacity: 0;
+            transform: scale(.85);
             max-width: 256px;
             pointer-events: none;
         }
@@ -128,11 +132,13 @@
             5% {
                 z-index: 10000;
                 opacity: 1;
+                transform: scale(1);
             }
 
             95% {
                 z-index: 10000;
                 opacity: 1;
+                transform: scale(1);
             }
 
             99.99% {
@@ -160,10 +166,13 @@
             animation-duration: 7s;
             z-index: 10000;
             width: 95%;
-            transform: translateY(-150%);
+            transform: scale(1, 0);
+            transform-origin: center 0;
             padding-top: 8px;
-            background: #fff;
+            background: #ECEFF1;
             max-width: 512px;
+            border-radius: 16px;
+            animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .notification:hover {
@@ -174,11 +183,11 @@
             0% {}
 
             5% {
-                transform: translateY(0);
+                transform: scale(1) translateY(32px);
             }
 
             95% {
-                transform: translateY(0);
+                transform: scale(1) translateY(32px);
             }
 
             100% {}
@@ -195,6 +204,25 @@
 
         #appList::-webkit-scrollbar-corner {
             display: none;
+        }
+
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #ECEFF1;
+        }
+
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
         }
     </style>
 </head>
@@ -215,62 +243,68 @@
     <div id="dockBar">
         <div class="mdui-container" style="padding-left: 16px;padding-right: 16px;max-width: 640px;">
             <div class="mdui-row-xs-4">
-                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('phone.html', '#303F9F', '#000', '#fff', '#fff');">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('images/phone.png', 'phone.html', '#E8EAF6', '#000', '#000');">
                     <img src="images/phone.png">
                 </div>
-                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('mms.html', '#33691E', '#000', '#fff', '#fff');">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('images/mms.png', 'mms.html', '#E8F5E9', '#000', '#000');">
                     <img src="images/mms.png">
                 </div>
-                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('images/Bing.png', 'https://www.bing.com/', '#000', '#000', '#000');">
                     <img src="images/Bing.png">
                 </div>
-                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('AppStore.html', '#303F9F', '#000', '#fff', '#fff');">
+                <div class="mdui-col icon icon-dock" onclick="javascript:launchApp('images/AppStore.png', 'AppStore.html', '#E8EAF6', '#000', '#000');">
                     <img src="images/AppStore.png">
                 </div>
             </div>
         </div>
         <div id="navBar">
             <div class="mdui-ripple mdui-ripple-white navButton" id="navBack">
-                <img src="images/ic_sysbar_back.png">
+                <svg>
+                    <path d="M15.5417 1.66669C15.1833 1.66669 14.8417 1.76669 14.5333 1.94169L3.21667 8.74169C2.775 9.00002 2.5 9.48335 2.5 10C2.5 10.5167 2.775 11 3.21667 11.2584L14.5333 18.05C14.8417 18.2334 15.1833 18.325 15.5417 18.325C16.625 18.325 17.5 17.45 17.5 16.3667V3.62502C17.5 2.54169 16.625 1.66669 15.5417 1.66669Z" fill="rgba(255, 255, 255, .75)" />
+                </svg>
             </div>
             <div class="mdui-ripple mdui-ripple-white navButton" id="navHome">
-                <img src="images/ic_sysbar_home.png">
+                <svg>
+                    <path d="M10.0001 18.3334C5.40008 18.3334 1.66675 14.6 1.66675 10C1.66675 5.40002 5.40008 1.66669 10.0001 1.66669C14.6001 1.66669 18.3334 5.40002 18.3334 10C18.3334 14.6 14.6001 18.3334 10.0001 18.3334Z" fill="rgba(255, 255, 255, .75)" />
+                </svg>
             </div>
-            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white navButton" style="position: fixed;right: 0;width: 48px;float: right;" id="devTools">
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white navButton" style="position: fixed;right: 0;width: 48px;float: right;color: rgba(255, 255, 255, .75);" id="devTools">
                 <i class="mdui-icon material-icons">build</i>
             </button>
         </div>
     </div>
     <div class="mdui-container mdui-center" style="padding-top: 28px;padding-left: 16px;padding-right: 16px;max-width: 640px;">
         <div class="mdui-row-xs-4" style="overflow: scroll;" id="appList">
-            <div class="mdui-col icon" onclick="javascript:launchApp('settings.html', '#455A64', '#000', '#fff', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/Settings.png', 'settings.html', '#ECEFF1', '#000', '#000');">
                 <img src="images/Settings.png">
                 <p>设置</p>
             </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('contacts.html', '#01579B', '#000', '#fff', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/contacts.png', 'contacts.html', '#E3F2FD', '#000', '#000');">
                 <img src="images/contacts.png">
                 <p>通讯录</p>
             </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('files.html', '#455A64', '#000', '#fff', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/files.png', 'files.html', '#ECEFF1', '#000', '#000');">
                 <img src="images/files.png">
                 <p>文件</p>
             </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('AppStore.html', '#303F9F', '#000', '#fff', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/AppStore.png', 'AppStore.html', '#E8EAF6', '#000', '#000');">
                 <img src="images/AppStore.png">
                 <p>应用商店</p>
             </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bing.com/', '#000', '#000', '#fff', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/Bing.png', 'https://www.bing.com/', '#000', '#000', '#fff');">
                 <img src="images/Bing.png">
                 <p>Bing</p>
             </div>
-            <div class="mdui-col icon" onclick="javascript:launchApp('https://www.bgtool.tk/', '#ECEFF1', '#000', '#000', '#fff');">
+            <div class="mdui-col icon" onclick="javascript:launchApp('images/BGTool.jpg', 'https://www.bgtool.tk/', '#ECEFF1', '#000', '#000');">
                 <img src="images/BGTool.jpg">
                 <p>BGTool</p>
             </div>
             <div id="userApps"></div>
         </div>
     </div>
-    <iframe id="iframe"></iframe>
+    <iframe id="iframe_A" style="opacity: 0;z-index: 9998;"></iframe>
+    <iframe id="iframe_B" style="opacity: 0;z-index: 9997;"></iframe>
+    <iframe id="iframe_base" style="z-index: 9996;" src="splash.html"></iframe>
     <div class="mdui-dialog" id="appInstaller">
         <div class="mdui-dialog-title">
             <img id="installerIcon" style="display: inline-block;width: 32px;height: 32px;border-radius: 8px;vertical-align: middle;">
@@ -294,8 +328,14 @@
         </div>
     </div>
     <script>
+        //设置默认 iframe
+        currentIframe = gebi("iframe_A");
         //设置应用打开状态
         opened = 0;
+        //设置历史记录相关数据
+        keepHistory = 1;
+        switchedApp = 0;
+        recent = [];
         //函数：通过 ID 获取元素
         function gebi(id) {
             return document.getElementById(id);
@@ -321,10 +361,14 @@
                 }
                 //刷新深色主题
                 if (localStorage.getItem("darkTheme") == "true") {
-                    gebi("iframe").style.background = "#303030";
+                    gebi("iframe_A").style.background = "#303030";
+                    gebi("iframe_B").style.background = "#303030";
+                    gebi("iframe_base").style.background = "#303030";
                     document.body.classList.add("mdui-theme-layout-dark");
                 } else {
-                    gebi("iframe").style.background = "#fff";
+                    gebi("iframe_A").style.background = "#fff";
+                    gebi("iframe_B").style.background = "#fff";
+                    gebi("iframe_base").style.background = "#fff";
                     document.body.classList.remove("mdui-theme-layout-dark");
                 }
             }, 100);
@@ -352,23 +396,45 @@
             }
         };
         //函数：启动应用
-        function launchApp(url, color1, color2, textColor1, textColor2) {
-            gebi("iframe").style.transform = "translateY(0)";
+        function launchApp(icon, url, color1, color2, textColor) {
+            gebi("iframe_A").style.transitionDuration = "0s";
+            gebi("iframe_A").style.opacity = 0;
+            gebi("iframe_B").style.transitionDuration = "0s";
+            gebi("iframe_B").style.opacity = 0;
+            gebi("iframe_base").contentWindow.document.getElementById("splashImg").src = icon;
+            gebi("iframe_base").contentWindow.document.getElementById("splashImg").style.display = "block";
+            gebi("iframe_A").style.transform = "translateY(0)";
+            gebi("iframe_B").style.transform = "translateY(0)";
+            gebi("iframe_base").style.transform = "translateY(0)";
             window.setTimeout(function() {
-                gebi("iframe").src = url;
-            }, 400);
-            gebi("statusBar").style.background = color1;
+                currentIframe.style.transitionDuration = ".4s";
+                currentIframe.style.opacity = 1;
+                gebi("statusBar").style.background = color1;
+                gebi("statusBar").style.color = textColor;
+                currentIframe.src = url;
+                window.setTimeout(function() {
+                    gebi("iframe_base").contentWindow.document.getElementById("splashImg").style.display = "none";
+                }, 400);
+            }, 450);
+            if (localStorage.getItem("darkTheme") == "true") {
+                gebi("statusBar").style.background = "#303030";
+                gebi("statusBar").style.color = "#fff";
+            } else {
+                gebi("statusBar").style.background = "#fff";
+                gebi("statusBar").style.color = "#000";
+            }
             gebi("navBar").style.background = color2;
-            gebi("statusBar").style.color = textColor1;
-            gebi("navBar").style.color = textColor2;
             opened = 1;
             getDevTools();
         }
         //事件：主页键被点击
         gebi("navHome").onclick = function() {
-            gebi("iframe").style.transform = "translateY(calc(100% + 48px))";
+            gebi("iframe_A").style.transform = "translateY(calc(100% + 48px))";
+            gebi("iframe_B").style.transform = "translateY(calc(100% + 48px))";
+            gebi("iframe_base").style.transform = "translateY(calc(100% + 48px))";
             window.setTimeout(function() {
-                gebi("iframe").src = "about:blank";
+                gebi("iframe_A").src = "about:blank";
+                gebi("iframe_B").src = "about:blank";
             }, 400);
             gebi("statusBar").style.background = "";
             gebi("navBar").style.background = "";
@@ -376,18 +442,50 @@
             gebi("navBar").style.color = "";
             document.title = "Launcher";
             opened = 0;
+            recent = [];
             getDevTools();
         };
         //事件：返回键被点击
         gebi("navBack").onclick = function() {
             if (opened == 1) {
-                gebi("iframe").contentWindow.history.back();
+                if (recent[recent.length - 2] == undefined) {
+                    gebi("navHome").click();
+                } else {
+                    keepHistory = 0;
+                    if (recent[recent.length - 1][1] == 1) {
+                        switchActivity(recent[recent.length - 2][0], true, true);
+                    } else {
+                        switchActivity(recent[recent.length - 2][0], true, false);
+                    }
+                    recent.splice(recent.length - 1, 1);
+                }
             }
         };
         //事件：iframe 加载完成
-        gebi("iframe").onload = function() {
-            if (this.contentWindow.document.title != "") {
+        gebi("iframe_A").onload = function() {
+            if (this.contentWindow.document.title != "" && currentIframe == this) {
                 document.title = this.contentWindow.document.title;
+                if (keepHistory == 1) {
+                    recent.push([this.contentWindow.location.href, switchedApp]);
+                    if (switchedApp == 1) {
+                        switchedApp = 0;
+                    }
+                } else {
+                    keepHistory = 1;
+                }
+            }
+        };
+        gebi("iframe_B").onload = function() {
+            if (this.contentWindow.document.title != "" && currentIframe == this) {
+                document.title = this.contentWindow.document.title;
+                if (keepHistory == 1) {
+                    recent.push([this.contentWindow.location.href, switchedApp]);
+                    if (switchedApp == 1) {
+                        switchedApp = 0;
+                    }
+                } else {
+                    keepHistory = 1;
+                }
             }
         };
         //函数：发送 Toast
@@ -399,7 +497,7 @@
             //创建 Toast 元素并显示
             var toastDiv = document.createElement("div");
             toastDiv.innerText = message;
-            toastDiv.classList.add("toast");
+            toastDiv.classList.add("toast", "mdui-shadow-6");
             document.body.appendChild(toastDiv);
             //将所有 Toast 居中显示
             for (i = 0; i < document.getElementsByClassName("toast").length; i++) {
@@ -459,16 +557,22 @@
                         eval('(' + getData.script + ')();');
                     }
                     break;
-                    //API：应用跳转
-                case "jumpApp":
-                    if (localStorage.getItem("API_jumpApp") == 1) {
-                        launchApp(getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                    //API：切换应用
+                case "switchApp":
+                    if (localStorage.getItem("API_switchApp") == 1) {
+                        switchApp(getData.url, getData.color1, getData.color2, getData.textColor, getData.back);
+                    }
+                    break;
+                    //API：切换活动
+                case "switchActivity":
+                    if (localStorage.getItem("API_switchActivity") == 1) {
+                        switchActivity(getData.url, getData.back);
                     }
                     break;
                     //API：添加应用
                 case "addApp":
                     if (localStorage.getItem("API_addApp") == 1) {
-                        addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor1, getData.textColor2);
+                        addApp(getData.icon, getData.name, getData.url, getData.color1, getData.color2, getData.textColor);
                     }
                     break;
                     //API：移除应用
@@ -522,7 +626,7 @@
             localStorage.setItem("displayDevTools", 0);
         }
         //API 控制设置
-        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_jumpApp", "API_addApp", "API_removeApp"];
+        APIs = ["API_postToast", "API_postNotification", "API_postScript", "API_switchApp", "API_switchActivity", "API_addApp", "API_removeApp"];
         APIs.forEach(function(item) {
             if (!localStorage.getItem(item)) {
                 localStorage.setItem(item, 1);
@@ -544,7 +648,7 @@
                         gebi("batteryIcon").innerText = "battery_alert";
                         gebi("batteryIcon").classList.add("mdui-text-color-red");
                         if (batteryAlerted == 0) {
-                            notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">battery_alert</i>`, "电池电量不足", "仅剩 " + (battery.level * 100) + "%", `function() {
+                            notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">battery_alert</i>`, "电池电量不足", "仅剩 " + (battery.level * 100).toFixed(0) + "%", `function() {
                                 alert("电池电量不高于 20% 时会发送此通知。\\n请及时进行充电。");}`);
                             batteryAlerted = 1;
                         }
@@ -660,7 +764,11 @@
             //判断是否为最新版本
             if (versionCode < updateData.versionCode) {
                 notice(`<i class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue-grey mdui-text-color-white">system_update</i>`, "有可用的系统更新", updateData.versionName + " 版本已发布", function() {
-                    launchApp("update.html", "#1976D2", "#000", "#fff", "#fff");
+                    if (opened == 1) {
+                        switchActivity("update.html", false, true);
+                    } else {
+                        launchApp("images/update.png", "update.html", "#1976D2", "#000", "#fff", "#fff");
+                    }
                 });
             }
         }
@@ -679,8 +787,8 @@
             }, 500);
         }, false);
         //函数：添加应用
-        function addApp(icon, name, url, color1, color2, textColor1, textColor2) {
-            var installingInfo = [icon, name, url, color1, color2, textColor1, textColor2];
+        function addApp(icon, name, url, color1, color2, textColor) {
+            var installingInfo = [icon, name, url, color1, color2, textColor];
             var installerDialog = new mdui.Dialog("#appInstaller", {
                 history: false
             });
@@ -720,7 +828,7 @@
             }
             gebi("userApps").innerHTML = "";
             apps.forEach(function(item) {
-                gebi("userApps").innerHTML += `<div class="mdui-col icon" onclick="javascript:launchApp('` + item[2] + `', '` + item[3] + `', '` + item[4] + `', '` + item[5] + `', '` + item[6] + `');">
+                gebi("userApps").innerHTML += `<div class="mdui-col icon" onclick="javascript:launchApp('` + item[0] + `', '` + item[2] + `', '` + item[3] + `', '` + item[4] + `', '` + item[5] + `');">
                     <img src="` + item[0] + `">
                     <p>` + item[1] + `</p>
                 </div>`;
@@ -729,7 +837,7 @@
         //事件：调试面板按钮被点击
         gebi("devTools").onclick = function() {
             if (navigator.onLine) {
-                gebi("iframe").src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
+                currentIframe.src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
                 toast("正在向嵌入页载入调试面板");
             } else {
                 toast("当前处于离线状态");
@@ -742,6 +850,68 @@
             } else {
                 gebi("devTools").style.display = "none";
             }
+        }
+        //函数：切换活动
+        function switchActivity(url, back, app = false) {
+            if (currentIframe == gebi("iframe_A")) {
+                oldIframe = gebi("iframe_A");
+                newIframe = gebi("iframe_B");
+            } else {
+                oldIframe = gebi("iframe_B");
+                newIframe = gebi("iframe_A");
+            }
+            var translate = back == true ? 33.33 : -33.33;
+            newIframe.src = url;
+            window.setTimeout(function() {
+                oldIframe.src = "about:blank";
+            }, 400);
+            if (app == true) {
+                gebi("iframe_base").style.transitionDuration = "0s";
+                gebi("iframe_base").style.opacity = 0;
+                oldIframe.style.zIndex = 9997;
+                oldIframe.style.transform = "translateX(" + translate * 3.25 + "%)";
+                oldIframe.style.scale = .85;
+                newIframe.style.zIndex = 9998;
+                newIframe.style.transitionDuration = "0s";
+                newIframe.style.opacity = 1;
+                newIframe.style.transform = "translateX(" + (-translate * 3.25) + "%)";
+                newIframe.style.scale = .85;
+                window.setTimeout(function() {
+                    newIframe.style.transitionDuration = ".4s";
+                    newIframe.style.transform = "translateX(0)";
+                    window.setTimeout(function() {
+                        oldIframe.style.scale = 1;
+                        newIframe.style.scale = 1;
+                    }, 200);
+                }, 10);
+                switchedApp = 1;
+                window.setTimeout(function() {
+                    gebi("iframe_base").style.opacity = 1;
+                    gebi("iframe_base").style.transitionDuration = ".4s";
+                }, 400);
+            } else {
+                oldIframe.style.opacity = 0;
+                oldIframe.style.zIndex = 9997;
+                oldIframe.style.transform = "translateX(" + translate + "%)";
+                newIframe.style.zIndex = 9998;
+                newIframe.style.transitionDuration = "0s";
+                newIframe.style.opacity = 0;
+                newIframe.style.transform = "translateX(" + (-translate) + "%)";
+                window.setTimeout(function() {
+                    newIframe.style.transitionDuration = ".4s";
+                    newIframe.style.opacity = 1;
+                    newIframe.style.transform = "translateX(0)";
+                }, 10);
+                switchedApp = 0;
+            }
+            currentIframe = newIframe;
+        }
+        //函数：切换应用
+        function switchApp(url, color1, color2, textColor, back) {
+            gebi("statusBar").style.background = color1;
+            gebi("navBar").style.background = color2;
+            gebi("statusBar").style.color = textColor;
+            switchActivity(url, back, true);
         }
     </script>
     <script src="eruda/eruda.js"></script>
