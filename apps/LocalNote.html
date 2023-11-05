@@ -59,76 +59,8 @@
             background: radial-gradient(rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .5) 60%, rgba(255, 255, 255, 0) 70%) !important
         }
 
-        @media (prefers-color-scheme: dark) {
-            .mdui-theme-layout-auto .mdui-color-yellow-100 {
-                background-color: #F57F17 !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-yellow-200 {
-                background-color: #F9A825 !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-blue-100 {
-                background-color: #0D47A1 !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-blue-200 {
-                background-color: #1565C0 !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-green-100 {
-                background-color: #1B5E20 !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-green-200 {
-                background-color: #2E7D32 !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-red-100 {
-                background-color: #B71C1C !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-red-200 {
-                background-color: #C62828 !important;
-                color: white !important;
-            }
-
-            .mdui-theme-layout-auto .waves-ripple {
-                background: rgba(255, 255, 255, .4) !important;
-                background: -webkit-radial-gradient(rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .5) 60%, rgba(255, 255, 255, 0) 70%) !important;
-                background: -o-radial-gradient(rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .5) 60%, rgba(255, 255, 255, 0) 70%) !important;
-                background: -moz-radial-gradient(rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .5) 60%, rgba(255, 255, 255, 0) 70%) !important;
-                background: radial-gradient(rgba(255, 255, 255, .2) 0, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .4) 50%, rgba(255, 255, 255, .5) 60%, rgba(255, 255, 255, 0) 70%) !important
-            }
-
-            .mdui-theme-layout-auto .mdui-color-theme-50 {
-                background-color: #424242 !important;
-                color: #ffffff !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-color-theme-accent {
-                background-color: #C51162 !important;
-                color: #ffffff !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-select-menu {
-                background-color: #424242 !important;
-                color: #ffffff !important;
-            }
-
-            .mdui-theme-layout-auto .mdui-tooltip {
-                background-color: rgba(158, 158, 158, 0.9);
-                color: #000;
-            }
-        }
-
-        .mdui-btn-raised {
-            border-radius: 16px;
+        .mdui-btn {
+            border-radius: 32px;
             padding: 20px;
         }
 
@@ -173,9 +105,10 @@
         .mdui-select-menu {
             -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
             box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
-            border-radius: 16px;
+            border-radius: 8px;
             background-color: #E8EAF6 !important;
             color: rgba(0, 0, 0, 0.87) !important;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .mdui-select-menu-item:hover {
@@ -188,24 +121,19 @@
         }
 
         .mdui-tooltip {
-            border-radius: 16px;
+            border-radius: 8px;
             -webkit-transform: scale(1);
             transform: scale(1);
-        }
-
-        .mdui-theme-layout-dark .mdui-tooltip {
-            background-color: rgba(158, 158, 158, 0.9);
-            color: #000;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .mdui-dialog {
             border-radius: 24px;
-            -webkit-transform: scale(1);
-            transform: scale(1);
             -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
             box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
-            -webkit-transition-duration: 0.2s;
-            transition-duration: 0.2s;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .mdui-overlay {
@@ -217,31 +145,33 @@
         }
 
         .mdui-drawer {
-            -webkit-transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
-            transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1) !important;
+            -webkit-transition: transform 0.3s cubic-bezier(0.77, 0, 0.175, 1) !important;
+            transition: transform 0.3s cubic-bezier(0.77, 0, 0.175, 1) !important;
         }
 
-        html {
-            transition-property: opacity;
-            transition: .3s;
-            animation-name: opacity;
-            animation-duration: .3s;
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        @keyframes opacity {
-            from {
-                opacity: 0;
-            }
+        .mdui-dialog-actions .mdui-btn {
+            padding: 0;
+        }
 
-            to {
-                opacity: 1;
-            }
+        .mdui-textfield-input {
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 4px 4px 0 0;
+            padding: 8px;
+        }
+
+        .mdui-theme-layout-dark .mdui-textfield-input {
+            background-color: rgba(255, 255, 255, .1);
         }
     </style>
 </head>
 
-<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-drawer-body-left mdui-theme-layout-auto mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-3">
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-drawer-body-left mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
         <div class="mdui-toolbar mdui-color-theme-50">
             <a class="mdui-btn mdui-btn-icon waves-block" mdui-drawer="{target: '#drawer'}">
                 <i class="mdui-icon material-icons">menu</i>
@@ -263,10 +193,10 @@
         <ul class="mdui-list" id="noteList" style="width: 100%;"></ul>
         <div id="guide" style="width: 100%;text-align: center;">
             <div class="mdui-typo-body-2 mdui-text-center mdui-m-b-1">没有可显示的内容</div>
-            <button class="mdui-btn mdui-btn-raised waves-block mdui-color-theme-accent mdui-valign mdui-center" onclick="javascript:newNote();" style="margin: 12px;">新建备忘录</button>
+            <button class="mdui-btn waves-block mdui-color-theme-accent mdui-valign mdui-center" onclick="javascript:newNote();" style="margin: 12px;">新建备忘录</button>
         </div>
     </div>
-    <div id="choose"><button class="mdui-btn mdui-btn-raised waves-block mdui-color-theme-accent mdui-center mdui-valign" style="margin: 16px;" onclick="javascript:new mdui.Drawer('#drawer').open();">选择一条备忘录</button></div>
+    <div id="choose"><button class="mdui-btn waves-block mdui-color-theme-accent mdui-center mdui-valign" style="margin: 16px;" onclick="javascript:new mdui.Drawer('#drawer').open();">选择一条备忘录</button></div>
     <form class="mdui-center mdui-color-theme-50" onsubmit="return false;">
         <div onclick="javascript:loadType();" style="padding: 8px;transition: 0.2s;border-radius: 8px;" id="selectDiv">
             <select class="mdui-select" mdui-select>
@@ -289,9 +219,8 @@
             <label class="mdui-textfield-label">修改日期</label>
             <input class="mdui-textfield-input" type="text" id="date" disabled />
         </div>
-        <button class="mdui-btn mdui-btn-raised waves-block mdui-color-theme-accent mdui-center mdui-valign" onclick="javascript:saveNote();" id="save" disabled="disabled" style="padding: 20px 32px;margin-top: 16px;">保存</button>
+        <button class="mdui-btn waves-block mdui-color-theme-accent mdui-center mdui-valign" onclick="javascript:saveNote();" id="save" disabled="disabled" style="padding: 20px 32px;margin-top: 16px;">保存</button>
     </form>
-    <div class="mdui-typo-body-2 mdui-text-center mdui-m-t-2">Made by Burger Studio.</div>
     <div class="mdui-dialog mdui-color-theme-50" id="deleting">
         <div class="mdui-dialog-title">删除此备忘录？</div>
         <div class="mdui-dialog-content">这将使你丢失它的全部数据。</div>

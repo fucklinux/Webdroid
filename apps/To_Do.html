@@ -8,35 +8,54 @@
     <link rel="shortcut icon" href="../images/To_Do.png" type="image/x-icon">
     <title>To Do</title>
     <style>
-        html {
-            transition-property: opacity;
-            transition: .3s;
-            animation-name: opacity;
-            animation-duration: .3s;
-        }
-
-        @keyframes opacity {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
         .mdui-list-item-content {
             word-break: break-word;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #E8EAF6;
+        }
+
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
+        }
+
+        .mdui-textfield-input {
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 4px 4px 0 0;
+            padding: 8px;
+        }
+
+        .mdui-theme-layout-dark .mdui-textfield-input {
+            background-color: rgba(255, 255, 255, .1);
         }
     </style>
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
-    <div class="mdui-appbar mdui-appbar-fixed">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a class="mdui-typo-title mdui-text-color-white">To Do</a>
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-typo-title">To Do</a>
             <div class="mdui-toolbar-spacer"></div>
-            <a class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '新建'}" mdui-dialog="{target: '#add'}">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '新建'}" mdui-dialog="{target: '#add'}">
                 <i class="mdui-icon material-icons">add</i>
             </a>
         </div>
@@ -81,10 +100,12 @@
             document.body.classList.add("mdui-theme-layout-dark");
             postScript(function() {
                 gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
             });
         } else {
             postScript(function() {
-                gebi("statusBar").style.background = "#303F9F";
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
             });
         }
         //事件：页面加载完成

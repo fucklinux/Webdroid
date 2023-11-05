@@ -8,35 +8,26 @@
     <link rel="shortcut icon" href="../images/calc.png" type="image/x-icon">
     <title>计算器</title>
     <style>
-        html {
-            transition-property: opacity;
-            transition: .3s;
-            animation-name: opacity;
-            animation-duration: .3s;
-        }
-
-        @keyframes opacity {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
         .keys {
             text-align: center;
             width: 100%;
             position: fixed;
             bottom: 0;
             left: 0;
-            background: #DEDEDE;
+            background: #FFF3E0;
+            padding: 16px 0;
         }
 
         .key {
             width: 64px;
-            height: 64px;
+            height: 48px;
+            border-radius: 24px;
+            background: #FFE0B2;
+            margin: 4px;
+        }
+
+        .key:hover {
+            background: #FFCC80;
         }
 
         #scn {
@@ -60,10 +51,40 @@
             right: 8px;
             top: 8px;
         }
+
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #FFF3E0;
+        }
+
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
+        }
+
+        .mdui-theme-layout-dark .key {
+            background: #545454;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
     </style>
 </head>
 
-<body>
+<body class="mdui-theme-accent-deep-orange">
     <button class="mdui-btn mdui-btn-icon mdui-ripple" id="topBtn" mdui-tooltip="{content: '历史记录'}" mdui-dialog="{target: '#calcHistory'}" onclick="javascript:loadHistory();"><i class="mdui-icon material-icons">history</i></button>
     <div id="scn" class="mdui-valign"></div>
     <div class="keys">
