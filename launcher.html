@@ -383,6 +383,7 @@
             freshApps();
             getGrayscale();
             getDevTools();
+            evalCustomScripts();
             if (localStorage.getItem("updateNotification") == 1) {
                 checkUpdate();
             }
@@ -838,7 +839,7 @@
         gebi("devTools").onclick = function() {
             if (navigator.onLine) {
                 currentIframe.src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
-                toast("正在向嵌入页载入调试面板");
+                toast("正在向嵌入页载入调试面板......");
             } else {
                 toast("当前处于离线状态");
             }
@@ -912,6 +913,13 @@
             gebi("navBar").style.background = color2;
             gebi("statusBar").style.color = textColor;
             switchActivity(url, back, true);
+        }
+        //函数：执行自定义 HTML 代码中的 JavaScript 脚本
+        function evalCustomScripts() {
+            var customScripts = document.getElementById("customHTMLDiv").getElementsByTagName("script");
+            for (var i = 0; i < customScripts.length; i++) {
+                eval(customScripts[i].innerHTML);
+            }
         }
     </script>
     <script src="eruda/eruda.js"></script>

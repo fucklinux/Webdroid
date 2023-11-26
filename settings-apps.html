@@ -187,7 +187,8 @@
         //函数：刷新应用列表
         function freshApps() {
             if (JSON.parse(localStorage.getItem("apps")).length == 0) {
-                var apps = [];
+                document.getElementById("noApp").style.opacity = 1;
+                apps = [];
             } else {
                 apps = JSON.parse(localStorage.getItem("apps"));
                 document.getElementById("noApp").style.opacity = 0;
@@ -245,6 +246,50 @@
                 "back": back
             };
             window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+        }
+        //以下为实验性功能
+        function test() {
+            return "实验性功能：\n1. 导出全部应用：exportApps()\n2. 导入应用（覆盖现有）：importApps(数据内容)\n3. 清除全部应用：clearApps()";
+        }
+
+        function exportApps() {
+            copyHandle(JSON.stringify(apps));
+            console.log(JSON.stringify(apps));
+            return "已复制到剪贴板";
+        }
+
+        function importApps(data) {
+            if (data == undefined) {
+                return "缺失数据内容";
+            } else {
+                apps = data;
+                localStorage.setItem("apps", JSON.stringify(apps));
+                freshApps();
+                postScript(function() {
+                    freshApps();
+                });
+                return "已导入应用";
+            }
+        }
+
+        function clearApps() {
+            apps = [];
+            localStorage.setItem("apps", JSON.stringify(apps));
+            freshApps();
+            postScript(function() {
+                freshApps();
+            });
+            return "已清除全部应用";
         }
     </script>
 </body>
