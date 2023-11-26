@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="../../images/webDev.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
+    <script src="../../codemirror/codemirror.js"></script>
+    <link rel="stylesheet" href="../../codemirror/codemirror.css">
+    <script src="../../codemirror/xml.js"></script>
+    <script src="../../codemirror/css.js"></script>
+    <script src="../../codemirror/javascript.js"></script>
+    <script src="../../codemirror/htmlmixed.js"></script>
+    <script src="../../codemirror/active-line.js"></script>
+    <title>编辑页面</title>
+    <style>
+        .CodeMirror {
+            height: calc(100% - 56px);
+        }
+
+        .mdui-theme-layout-dark .CodeMirror {
+            background: #303030;
+        }
+
+        .mdui-theme-layout-dark .CodeMirror-linenumbers {
+            background: #505050;
+        }
+
+        .mdui-theme-layout-dark .CodeMirror-activeline-background {
+            background: #404040;
+        }
+
+        #saveBtn {
+            display: none;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #E8EAF6;
+        }
+
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
+        }
+
+        .mdui-menu {
+            border-radius: 4px;
+            background: #E8EAF6;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-menu-item a {
+            transition: .2s;
+        }
+
+        .mdui-menu-item a:hover {
+            background: rgba(0, 0, 0, .1);
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">编辑页面</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '保存'}" onclick="javascript:save();" id="saveBtn">
+                <i class="mdui-icon material-icons">save</i>
+            </a>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '预览'}" onclick="javascript:preview();">
+                <i class="mdui-icon material-icons">play_arrow</i>
+            </a>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '更多选项'}" mdui-menu="{target: '#menu'}">
+                <i class="mdui-icon material-icons">more_vert</i>
+            </a>
+            <ul class="mdui-menu mdui-shadow-3" id="menu">
+                <li class="mdui-menu-item" id="undo">
+                    <a class="mdui-ripple"><i class="mdui-icon material-icons" style="font-size: 24px;position: absolute;top: calc(50% - 12px);right: 16px;">undo</i>撤销</a>
+                </li>
+                <li class="mdui-menu-item" id="redo">
+                    <a class="mdui-ripple"><i class="mdui-icon material-icons" style="font-size: 24px;position: absolute;top: calc(50% - 12px);right: 16px;">redo</i>重做</a>
+                </li>
+                <li class="mdui-menu-item" mdui-dialog="{target: '#del'}">
+                    <a class="mdui-ripple"><i class="mdui-icon material-icons" style="font-size: 24px;position: absolute;top: calc(50% - 12px);right: 16px;">delete</i>移除</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mdui-dialog" id="del">
+        <div class="mdui-dialog-title">移除页面？</div>
+        <div class="mdui-dialog-content">移除页面后，该页面所有数据将丢失。</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close onclick="javascript:del();">移除</button>
+        </div>
+    </div>
+    <script>
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            webPages = JSON.parse(localStorage.getItem("webPages"));
+            editingWebPage = sessionStorage.getItem("editingWebPage");
+            historySteps.push(webPages[editingWebPage][1]);
+            codeMirror = CodeMirror(document.body, {
+                mode: "htmlmixed",
+                lineNumbers: true,
+                styleActiveLine: true,
+                value: webPages[editingWebPage][1]
+            });
+            realInput = 1;
+            //事件：文本框内容变化
+            codeMirror.on("change", function(cm, changeObj) {
+                if (realInput == 1) {
+                    document.getElementById("saveBtn").style.display = "block";
+                    historySteps.splice(steps);
+                    historySteps.push(codeMirror.getValue());
+                    steps = historySteps.length;
+                } else {
+                    realInput = 1;
+                }
+            });
+        };
+        historySteps = [];
+        steps = 1;
+        //函数：保存页面
+        function save(toast = 1) {
+            webPages[editingWebPage][1] = codeMirror.getValue();
+            webPages[editingWebPage][2] = new Date().toLocaleString();
+            document.getElementById("saveBtn").style.display = "none";
+            localStorage.setItem("webPages", JSON.stringify(webPages));
+            if (toast == 1) {
+                postToast("已保存");
+            }
+        }
+        //函数：预览页面
+        function preview() {
+            save(0);
+            switchActivity("apps/webDev/preview.html");
+        }
+        //函数：移除页面
+        function del() {
+            webPages.splice(editingWebPage, 1);
+            localStorage.setItem("webPages", JSON.stringify(webPages));
+            postToast("已移除");
+            postScript(function() {
+                gebi('navBack').click();
+            });
+        }
+        //事件：撤销按钮被点击
+        document.getElementById("undo").onclick = function() {
+            if (historySteps[steps - 2] != undefined) {
+                realInput = 0;
+                codeMirror.setValue(historySteps[steps - 2]);
+                steps--;
+                document.getElementById("saveBtn").style.display = "block";
+            }
+        };
+        //事件：重做按钮被点击
+        document.getElementById("redo").onclick = function() {
+            if (historySteps[steps] != undefined) {
+                realInput = 0;
+                codeMirror.setValue(historySteps[steps]);
+                steps++;
+                document.getElementById("saveBtn").style.display = "block";
+            }
+        };
+    </script>
+</body>
+
+</html>
