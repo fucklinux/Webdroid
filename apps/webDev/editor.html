@@ -116,6 +116,11 @@
             <button class="mdui-btn mdui-ripple" mdui-dialog-close onclick="javascript:del();">移除</button>
         </div>
     </div>
+    <div style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -114514;" class="mdui-valign">
+        <div style="width: 100%;text-align: center;" id="spinner">
+            <div class="mdui-spinner"></div>
+        </div>
+    </div>
     <script>
         //接入 API：切换活动
         function switchActivity(url, back = false) {
@@ -179,6 +184,7 @@
                     realInput = 1;
                 }
             });
+            document.getElementById("spinner").style.display = "none";
         };
         historySteps = [];
         steps = 1;
