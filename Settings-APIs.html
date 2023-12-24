@@ -1,0 +1,418 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="images/Settings.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <script src="codemirror/codemirror.js"></script>
+    <link rel="stylesheet" href="codemirror/codemirror.css">
+    <script src="codemirror/javascript.js"></script>
+    <title>API 说明</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .mdui-theme-layout-dark .CodeMirror {
+            background: #303030;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">API 说明</a>
+        </div>
+    </div>
+    <div class="mdui-typo mdui-center" style="padding: 16px;max-width: 640px;">
+        <h3>API 说明</h3>
+        <p>嵌入在 Webdroid 内的网页可调用以下 API。</p>
+        <blockquote>
+            Contents<br>
+            <a href="#postToast">发送 Toast</a><br>
+            <a href="#postNotification">发送通知</a><br>
+            <a href="#postScript">执行 JavaScript 脚本</a><br>
+            <a href="#switchApp">切换应用</a><br>
+            <a href="#switchActivity">切换活动</a><br>
+            <a href="#addApp">添加应用</a><br>
+            <a href="#removeApp">移除应用</a>
+        </blockquote>
+        <h5 id="postToast">发送 Toast</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="prePostToast"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><code>string</code></td>
+                        <td>Toast 中的消息。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="postNotification">发送通知</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="prePostNotification"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>icon</code></td>
+                        <td><code>string</code></td>
+                        <td>通知图标，详见<a href="https://www.mdui.org/docs/material_icon">MDUI 开发文档</a>。</td>
+                    </tr>
+                    <tr>
+                        <td><code>title</code></td>
+                        <td><code>string</code></td>
+                        <td>通知标题。</td>
+                    </tr>
+                    <tr>
+                        <td><code>content</code></td>
+                        <td><code>string</code></td>
+                        <td>通知内容。</td>
+                    </tr>
+                    <tr>
+                        <td><code>clickFunc</code></td>
+                        <td><code>function</code></td>
+                        <td>通知回调，当通知被点击时执行。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="postScript">执行 JavaScript 脚本</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="prePostScript"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>script</code></td>
+                        <td><code>function</code></td>
+                        <td>要执行的 JavaScript 脚本。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="switchApp">切换应用</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="preSwitchApp"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>url</code></td>
+                        <td><code>string</code></td>
+                        <td>应用 URL。</td>
+                    </tr>
+                    <tr>
+                        <td><code>color1</code></td>
+                        <td><code>string</code></td>
+                        <td>应用状态栏背景色。</td>
+                    </tr>
+                    <tr>
+                        <td><code>color2</code></td>
+                        <td><code>string</code></td>
+                        <td>应用导航栏背景色。</td>
+                    </tr>
+                    <tr>
+                        <td><code>textColor</code></td>
+                        <td><code>string</code></td>
+                        <td>应用状态栏文本色。</td>
+                    </tr>
+                    <tr>
+                        <td><code>back</code></td>
+                        <td><code>boolean</code></td>
+                        <td>过渡效果是否为后退。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="switchActivity">切换活动</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="preSwitchActivity"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>url</code></td>
+                        <td><code>string</code></td>
+                        <td>活动 URL。</td>
+                    </tr>
+                    <tr>
+                        <td><code>back</code></td>
+                        <td><code>boolean</code></td>
+                        <td>过渡效果是否为后退。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="addApp">添加应用</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="preAddApp"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>icon</code></td>
+                        <td><code>string</code></td>
+                        <td>应用图标 URL。</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td><code>string</code></td>
+                        <td>应用名称。</td>
+                    </tr>
+                    <tr>
+                        <td><code>url</code></td>
+                        <td><code>string</code></td>
+                        <td>应用 URL。</td>
+                    </tr>
+                    <tr>
+                        <td><code>color1</code></td>
+                        <td><code>string</code></td>
+                        <td>应用状态栏背景色。</td>
+                    </tr>
+                    <tr>
+                        <td><code>color2</code></td>
+                        <td><code>string</code></td>
+                        <td>应用导航栏背景色。</td>
+                    </tr>
+                    <tr>
+                        <td><code>textColor</code></td>
+                        <td><code>string</code></td>
+                        <td>应用状态栏文本色。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 id="removeApp">移除应用</h5>
+        <p>加入以下 JavaScript 脚本来使用：</p>
+        <pre id="preRemoveApp"></pre>
+        <p>参数：</p>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>index</code></td>
+                        <td><code>number</code></td>
+                        <td>要移除的应用序号。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            CodeMirror(document.getElementById("prePostToast"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：发送 Toast
+function postToast(message) {
+    var postData = {
+        "type": "toast",
+        "message": message
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("prePostNotification"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：发送通知
+function postNotification(icon, title, content, clickFunc) {
+    var clickFuncStr = clickFunc.toString();
+    var postData = {
+        "type": "notification",
+        "icon": icon,
+        "title": title,
+        "content": content,
+        "clickFunc": clickFuncStr
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("prePostScript"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：执行 JavaScript 脚本
+function postScript(script) {
+    var scriptStr = script.toString();
+    var postData = {
+        "type": "JavaScript",
+        "script": scriptStr
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("preSwitchApp"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：切换应用
+function switchApp(url, color1, color2, textColor, back = false) {
+    var postData = {
+        "type": "switchApp",
+        "url": url,
+        "color1": color1,
+        "color2": color2,
+        "textColor": textColor,
+        "back": back
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("preSwitchActivity"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：切换活动
+function switchActivity(url, back = false) {
+    var postData = {
+        "type": "switchActivity",
+        "url": url,
+        "back": back
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("preAddApp"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：添加应用
+function addApp(icon, name, url, color1, color2, textColor) {
+    var postData = {
+        "type": "addApp",
+        "icon": icon,
+        "name": name,
+        "url": url,
+        "color1": color1,
+        "color2": color2,
+        "textColor": textColor
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+            CodeMirror(document.getElementById("preRemoveApp"), {
+                mode: "javascript",
+                readOnly: true,
+                value: `//接入 API：移除应用
+function removeApp(index) {
+    var postData = {
+        "type": "removeApp",
+        "index": index
+    };
+    window.parent.postMessage(JSON.stringify(postData), "*");
+}`
+            });
+        };
+    </script>
+</body>
+
+</html>

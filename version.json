@@ -1,7 +1,7 @@
 {
-    "versionCode": 231126,
-    "versionName": "2.1.0",
-    "updateDate": "2023年11月26日",
-    "change": "-新增 WebDev<br>-优化 “文件”中侧滑栏列表项在鼠标悬停时的效果<br>-修复 自定义 HTML 代码中 JavaScript 脚本不执行的问题",
+    "versionCode": 231224,
+    "versionName": "2.2.0",
+    "updateDate": "2023年12月24日",
+    "change": "-优化 UI<br>-计算器 支持科学计算器<br>-WebDev 支持重命名页面<br>-更改 项目内目录及文件命名规则，部分应用需重新添加（不会丢失数据）",
     "spinner": "display: none !important;"
 }

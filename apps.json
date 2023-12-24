@@ -17,54 +17,54 @@
         "description": "由 Burger Studio 开发的 LocalPaint"
     },
     {
-        "icon": "images/To_Do.png",
+        "icon": "images/ToDo.png",
         "name": "To Do",
-        "url": "apps/To_Do.html",
+        "url": "apps/ToDo.html",
         "color1": "#E8EAF6",
         "color2": "#000",
         "textColor": "#000",
         "description": "由 Burger Studio 开发的任务清单，需要 Webdroid 1.8.0 及以上版本。"
     },
     {
-        "icon": "images/timetable.png",
+        "icon": "images/Timetable.png",
         "name": "课程表",
-        "url": "apps/timetable.html",
+        "url": "apps/Timetable.html",
         "color1": "#E8EAF6",
         "color2": "#000",
         "textColor": "#000",
         "description": "由 Burger Studio 开发的课程表，需要 Webdroid 1.9.0 及以上版本。"
     },
     {
-        "icon": "images/daysMatter.png",
+        "icon": "images/DaysMatter.png",
         "name": "倒数日",
-        "url": "apps/daysMatter.html",
+        "url": "apps/DaysMatter.html",
         "color1": "#E8EAF6",
         "color2": "#000",
         "textColor": "#000",
         "description": "由 Burger Studio 开发的倒数日，需要 Webdroid 1.10.0 及以上版本。"
     },
     {
-        "icon": "images/calc.png",
+        "icon": "images/Calc.png",
         "name": "计算器",
-        "url": "apps/calc.html",
+        "url": "apps/Calc.html",
         "color1": "#fff",
         "color2": "#000",
         "textColor": "#000",
         "description": "由 Burger Studio 开发的计算器，需要 Webdroid 1.11.0 及以上版本。"
     },
     {
-        "icon": "images/latticeScreen.png",
+        "icon": "images/LatticeScreen.png",
         "name": "点阵显示器",
-        "url": "apps/latticeScreen/index.html",
+        "url": "apps/LatticeScreen/index.html",
         "color1": "#E8EAF6",
         "color2": "#000",
         "textColor": "#000",
         "description": "由 Burger Studio 开发的点阵显示器，需要 Webdroid 1.12.0 及以上版本。"
     },
     {
-        "icon": "images/webDev.png",
+        "icon": "images/WebDev.png",
         "name": "WebDev",
-        "url": "apps/webDev/index.html",
+        "url": "apps/WebDev/index.html",
         "color1": "#fff",
         "color2": "#000",
         "textColor": "#000",

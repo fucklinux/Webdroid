@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="images/Files.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>文件</title>
+    <style>
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-drawer {
+            border-radius: 0 16px 16px 0;
+            transition: transform 0.3s cubic-bezier(0.77, 0, 0.175, 1) !important;
+            background: #ECEFF1;
+        }
+
+        .mdui-drawer .mdui-list-item {
+            margin: 0 8px;
+            border-radius: 32px;
+        }
+
+        .mdui-drawer-list-item-active {
+            background: #CFD8DC;
+        }
+
+        .mdui-drawer-list-item-active:hover {
+            background: #B0BEC5;
+        }
+
+        .mdui-theme-layout-dark .mdui-drawer-list-item-active {
+            background: #455A64;
+        }
+
+        .mdui-theme-layout-dark .mdui-drawer-list-item-active:hover {
+            background: #546E7A;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-menu {
+            border-radius: 4px;
+            background: #ECEFF1;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-menu-item a {
+            transition: .2s;
+        }
+
+        .mdui-menu-item a:hover {
+            background: rgba(0, 0, 0, .1);
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar mdui-drawer-body-left">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: '#drawer', swipe: true}">
+                <i class="mdui-icon material-icons">menu</i>
+            </button>
+            <a class="mdui-typo-title">文件</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple">
+                <i class="mdui-icon material-icons">search</i>
+            </button>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '网格视图'}">
+                <i class="mdui-icon material-icons">view_module</i>
+            </button>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '排序依据'}" mdui-menu="{target: '#sortBy'}">
+                <i class="mdui-icon material-icons">sort</i>
+            </button>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-menu="{target: '#menu'}">
+                <i class="mdui-icon material-icons">more_vert</i>
+            </button>
+            <ul class="mdui-menu mdui-shadow-3" id="sortBy">
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">按名称</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">按修改日期</a>
+                </li>
+            </ul>
+            <ul class="mdui-menu mdui-shadow-3" id="menu">
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">新建窗口</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">新建文件夹</a>
+                </li>
+                <li class="mdui-menu-item">
+                    <a class="mdui-ripple">显示文件大小</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mdui-drawer mdui-shadow-3" id="drawer">
+        <ul class="mdui-list">
+            <li class="mdui-list-item mdui-ripple" onclick="javascript:active(0);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">image</i>
+                <div class="mdui-list-item-content">图片</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple" onclick="javascript:active(1);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">movie</i>
+                <div class="mdui-list-item-content">视频</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple" onclick="javascript:active(2);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">headset</i>
+                <div class="mdui-list-item-content">音频</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple" onclick="javascript:active(3);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">access_time</i>
+                <div class="mdui-list-item-content">最近</div>
+            </li>
+            <li class="mdui-divider"></li>
+            <li class="mdui-list-item mdui-ripple" onclick="javascript:active(4);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">file_download</i>
+                <div class="mdui-list-item-content">下载</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple mdui-drawer-list-item-active" onclick="javascript:active(5);" name="item">
+                <i class="mdui-list-item-icon mdui-icon material-icons">smartphone</i>
+                <div class="mdui-list-item-content">
+                    <div class="mdui-list-item-title">Webdroid</div>
+                    <div class="mdui-list-item-text">可用空间：114.51 GB</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="content">
+        <ul class="mdui-list">
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Alarms</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">DCIM</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Download</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Movies</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Music</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Notifications</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Pictures</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Ringtones</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                <div class="mdui-list-item-content">Webdroid</div>
+            </li>
+        </ul>
+    </div>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //函数：激活抽屉栏列表项
+        function active(index) {
+            var items = document.querySelectorAll('[name="item"]');
+            items.forEach(function(item) {
+                item.classList.remove("mdui-drawer-list-item-active");
+            });
+            document.getElementsByName("item")[index].classList.add("mdui-drawer-list-item-active");
+            if (document.body.clientWidth < 1024 && document.getElementsByClassName("mdui-overlay")[0] != undefined) {
+                document.getElementsByClassName("mdui-overlay")[0].click();
+            }
+            if (index == 5) {
+                document.getElementById("content").innerHTML = `<ul class="mdui-list">
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Alarms</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">DCIM</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Download</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Movies</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Music</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Notifications</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Pictures</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Ringtones</div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i class="mdui-list-item-icon mdui-icon material-icons">folder</i>
+                        <div class="mdui-list-item-content">Webdroid</div>
+                    </li>
+                </ul>`;
+            } else {
+                document.getElementById("content").innerHTML = `<div class="mdui-valign" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;opacity: 54%;">
+                    <div style="text-align: center;width: 100%;">
+                        <i class="mdui-icon material-icons" style="font-size: 64px;">folder_open</i>
+                        <p style="font-size: 18px;">无任何文件</p>
+                    </div>
+                </div>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

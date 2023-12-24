@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="images/Settings.png" type="image/x-icon">
+    <link rel="stylesheet" href="mdui-v1.0.1/css/mdui.min.css">
+    <script src="mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>电池</title>
+</head>
+
+<body class="mdui-theme-primary-blue-grey mdui-theme-accent-blue mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">电池</a>
+        </div>
+    </div>
+    <ul class="mdui-list mdui-center" style="max-width: 640px;">
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">电池充电状态</div>
+                <div class="mdui-list-item-text" id="1" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0" id="divider1"></li>
+        <li class="mdui-list-item mdui-ripple" id="chargingTime">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">电池剩余充电时间</div>
+                <div class="mdui-list-item-text" id="2" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0" id="divider2"></li>
+        <li class="mdui-list-item mdui-ripple" id="dischargingTime">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">电池剩余续航时间</div>
+                <div class="mdui-list-item-text" id="3" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+        <li class="mdui-divider mdui-m-y-0"></li>
+        <li class="mdui-list-item mdui-ripple">
+            <div class="mdui-list-item-content">
+                <div class="mdui-list-item-title">电池电量</div>
+                <div class="mdui-list-item-text" id="4" onclick="javascript:copyHandle(this.innerText);"></div>
+            </div>
+        </li>
+    </ul>
+    <script>
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#ECEFF1";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //函数：时间转换
+        function timeConvert(original) {
+            var hDifference = parseInt(original / (60 * 60)).toString().padStart(2, "0");
+            var mDifference = parseInt(original / 60 % 60).toString().padStart(2, "0");
+            var sDifference = parseInt(original % 60).toString().padStart(2, "0");
+            return hDifference + ":" + mDifference + ":" + sDifference;
+        }
+        //函数：获取电池信息
+        function getBatteryInfo() {
+            navigator.getBattery().then(function(battery) {
+                document.getElementById("1").innerText = (battery.charging ? "正在充电" : "未在充电");
+                //自动隐藏相应的列表项
+                if (battery.chargingTime == Infinity) {
+                    document.getElementById("chargingTime").style.display = "none";
+                    document.getElementById("divider1").style.display = "none";
+                } else {
+                    document.getElementById("chargingTime").style.display = "block";
+                    document.getElementById("divider1").style.display = "block";
+                    document.getElementById("2").innerText = timeConvert(battery.chargingTime);
+                }
+                if (battery.dischargingTime == Infinity) {
+                    document.getElementById("dischargingTime").style.display = "none";
+                    document.getElementById("divider2").style.display = "none";
+                } else {
+                    document.getElementById("dischargingTime").style.display = "block";
+                    document.getElementById("divider2").style.display = "block";
+                    document.getElementById("3").innerText = timeConvert(battery.dischargingTime);
+                }
+                document.getElementById("4").innerText = (battery.level * 100).toFixed(0) + "%";
+            });
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            getBatteryInfo();
+        };
+        //事件：电池信息改变
+        navigator.getBattery().then(function(battery) {
+            battery.onchargingchange = function() {
+                getBatteryInfo();
+            };
+            battery.onchargingtimechange = function() {
+                getBatteryInfo();
+            };
+            battery.ondischargingtimechange = function() {
+                getBatteryInfo();
+            };
+            battery.onlevelchange = function() {
+                getBatteryInfo();
+            };
+        });
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+            postToast("已复制到剪贴板");
+        }
+    </script>
+</body>
+
+</html>
