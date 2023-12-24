@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="../../images/LatticeScreen.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>函数图象</title>
+    <style>
+        #screen {
+            width: 320px;
+            height: 320px;
+            margin-left: calc(50% - 164px);
+            margin-top: 16px;
+            margin-bottom: 16px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 4px;
+            font-size: 0;
+        }
+
+        .block {
+            width: 1.25px;
+            height: 1.25px;
+            background-color: #666;
+            display: inline-block;
+            margin: 0;
+            vertical-align: top;
+            transition: background-color .3s;
+        }
+
+        .mdui-btn {
+            border-radius: 32px;
+        }
+
+        .mdui-textfield-input {
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 4px 4px 0 0;
+            padding: 8px;
+        }
+
+        .mdui-theme-layout-dark .mdui-textfield-input {
+            background-color: rgba(255, 255, 255, .1);
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">函数图象</a>
+        </div>
+    </div>
+    <div class="mdui-text-center">
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;" id="switchClear">绘制前清除：开</button>
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;margin-left: 16px;" id="switchXy">显示坐标轴：开</button>
+        <button class="mdui-btn mdui-ripple mdui-color-theme-accent" style="margin-top: 16px;margin-left: 16px;" id="drawBtn">绘制</button>
+        <div class="mdui-textfield">y = <input class="mdui-textfield-input" type="text" id="funcInput" style="width: 256px;display: inline-block;" /></div>
+        <div class="mdui-textfield" style="display: inline-block;">颜色：<input class="mdui-textfield-input" type="color" id="colorInput" value="#ffffff" style="width: 64px;display: inline-block;transform: translateY(4px);" type="color" /></div>
+        <div class="mdui-textfield" style="display: inline-block;margin-left: 16px;">精度：<input class="mdui-textfield-input" type="text" id="acc" value="0.01" style="width: 64px;display: inline-block;" type="number" /></div>
+    </div>
+    <div id="screen"></div>
+    <script>
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        window.onload = function() {
+            postToast("请稍等......");
+            window.setTimeout(function() {
+                createBlocks();
+            }, 300);
+            xy = new Array(255);
+            for (var i = 1; i < 256; i++) {
+                if (i == 128) {
+                    xy[i - 1] = [];
+                    for (var j = 1; j < 256; j++) {
+                        xy[i - 1].push(j);
+                    }
+                } else {
+                    xy[i - 1] = [128];
+                }
+            }
+        };
+
+        function createBlocks() {
+            var blocks = "";
+            for (var i = 1; i < 256; i++) {
+                for (var j = 1; j < 256; j++) {
+                    blocks += `<div class="block" id="block_` + i + `_` + j + `"></div>`;
+                }
+                blocks += "<br>";
+            }
+            document.getElementById("screen").innerHTML = blocks;
+            postToast("屏幕元素创建完毕");
+        }
+
+        function display(item, clear = 0, color = "#fff") {
+            for (var i = 1; i < 256; i++) {
+                for (var j = 1; j < 256; j++) {
+                    if (item[i - 1] != undefined && item[i - 1].indexOf(j) != -1) {
+                        document.getElementById("block_" + i + "_" + j).style.backgroundColor = color;
+                    } else if (clear == 1) {
+                        document.getElementById("block_" + i + "_" + j).style.backgroundColor = "#666";
+                    }
+                }
+            }
+        }
+
+        funcInput = document.getElementById("funcInput");
+        colorInput = document.getElementById("colorInput");
+
+        function draw(input, clear = 0, color) {
+            var funcArray = [];
+            for (var l = 0; l < 256; l++) {
+                funcArray.push([]);
+            }
+            var acc = Number(document.getElementById("acc").value);
+            for (x = -127; x < 128; x += acc) {
+                if (127 - Math.floor(eval(input)) >= 1 && 127 - Math.floor(eval(input)) < 256) {
+                    funcArray[127 - Math.floor(eval(input))].push(Math.floor(x + 128));
+                }
+            }
+            display(funcArray, clear, color == "" ? "#fff" : color);
+            postToast("绘制完毕");
+        }
+        switchClear = document.getElementById("switchClear");
+        clear_1 = 1;
+        switchClear.onclick = function() {
+            if (clear_1 == 1) {
+                clear_1 = 0;
+                switchClear.innerText = "绘制前清除：关";
+            } else {
+                clear_1 = 1;
+                switchClear.innerText = "绘制前清除：开";
+            }
+        };
+        switchXy = document.getElementById("switchXy");
+        xy_1 = 1;
+        switchXy.onclick = function() {
+            if (xy_1 == 1) {
+                xy_1 = 0;
+                switchXy.innerText = "显示坐标轴：关";
+            } else {
+                xy_1 = 1;
+                switchXy.innerText = "显示坐标轴：开";
+            }
+        };
+        document.getElementById("drawBtn").onclick = function() {
+            postToast("请稍等......");
+            window.setTimeout(function() {
+                try {
+                    if (xy_1 == 1) {
+                        display(xy, clear_1, "#999");
+                        draw(funcInput.value, 0, colorInput.value);
+                    } else {
+                        draw(funcInput.value, clear_1, colorInput.value);
+                    }
+                } catch (error) {
+                    postToast(String(error));
+                }
+            }, 500);
+        };
+    </script>
+</body>
+
+</html>

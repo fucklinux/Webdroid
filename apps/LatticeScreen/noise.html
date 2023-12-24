@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="../../images/LatticeScreen.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>白噪声</title>
+    <style>
+        #screen {
+            width: 320px;
+            height: 320px;
+            margin-left: calc(50% - 164px);
+            margin-top: 16px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 4px;
+        }
+
+        .block {
+            width: 18px;
+            height: 18px;
+            background-color: #666;
+            display: inline-block;
+            margin: 1px;
+            vertical-align: top;
+            transition: background-color .3s;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title">白噪声</a>
+        </div>
+    </div>
+    <div id="screen"></div>
+    <script>
+        //接入 API：切换活动
+        function switchActivity(url, back = false) {
+            var postData = {
+                "type": "switchActivity",
+                "url": url,
+                "back": back
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        window.onload = function() {
+            createBlocks();
+            window.setInterval(function() {
+                display(noise(), 1);
+            }, 10);
+        };
+
+        function createBlocks() {
+            for (var i = 1; i < 17; i++) {
+                for (var j = 1; j < 17; j++) {
+                    var block = document.createElement("div");
+                    block.classList.add("block");
+                    block.id = "block_" + i + "_" + j;
+                    document.getElementById("screen").appendChild(block);
+                }
+            }
+        }
+
+        function display(item, clear = 0, color = "#fff") {
+            for (var i = 1; i < 17; i++) {
+                for (var j = 1; j < 17; j++) {
+                    if (item[i - 1] != undefined && item[i - 1].indexOf(j) != -1) {
+                        document.getElementById("block_" + i + "_" + j).style.backgroundColor = color;
+                    } else if (clear == 1) {
+                        document.getElementById("block_" + i + "_" + j).style.backgroundColor = "#666";
+                    }
+                }
+            }
+        }
+
+        function noise() {
+            var noiseArray = [];
+            for (var i = 0; i < 16; i++) {
+                var noiseArray_1 = [];
+                for (var j = 0; j < 16; j++) {
+                    if (Math.random() < 0.5) {
+                        noiseArray_1.push(j + 1);
+                    }
+                }
+                noiseArray.push(noiseArray_1);
+            }
+            return noiseArray;
+        }
+    </script>
+</body>
+
+</html>
