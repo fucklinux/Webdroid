@@ -183,6 +183,9 @@
         //事件：页面加载完成
         window.onload = function() {
             freshApps();
+            window.setInterval(function() {
+                freshApps();
+            }, 1000);
         };
         //函数：刷新应用列表
         function freshApps() {
