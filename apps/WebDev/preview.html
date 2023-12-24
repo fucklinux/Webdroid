@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="../../images/WebDev.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../../mdui-v1.0.1/js/mdui.min.js"></script>
+    <title>预览页面</title>
+    <style>
+        #iframe {
+            position: fixed;
+            width: 100%;
+            height: calc(100% - 56px);
+            border: none;
+            background: #fff;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-appbar-with-toolbar">
+    <div class="mdui-appbar mdui-appbar-fixed mdui-shadow-1">
+        <div class="mdui-toolbar mdui-color-theme-50">
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" onclick="javascript:postScript(function (){ gebi('navBack').click(); });">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-typo-title" id="title">正在载入......</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '后退'}" id="backBtn">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '前进'}" id="forwardBtn">
+                <i class="mdui-icon material-icons">arrow_forward</i>
+            </a>
+            <a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '调试'}" onclick="javascript:erudaInit(0);">
+                <i class="mdui-icon material-icons">build</i>
+            </a>
+        </div>
+    </div>
+    <iframe id="iframe"></iframe>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#212121";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#E8EAF6";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            document.getElementById("iframe").contentWindow.document.documentElement.innerHTML = JSON.parse(localStorage.getItem("webPages"))[sessionStorage.getItem("editingWebPage")][1];
+            window.setInterval(function() {
+                document.getElementById("title").innerText = document.getElementById("iframe").contentWindow.document.title;
+            }, 500);
+            scripts = document.getElementById("iframe").contentWindow.document.getElementsByTagName("script");
+            for (var i = 0; i < scripts.length; i++) {
+                document.getElementById("iframe").contentWindow.eval(scripts[i].innerHTML);
+            }
+            erudaInit();
+        };
+        //函数：载入调试面板
+        function erudaInit(auto = 1) {
+            document.getElementById("iframe").src = `javascript:(function () { var script = document.createElement('script'); script.src="https://cdn.jsdelivr.net/npm/eruda"; document.body.append(script); script.onload = function () { eruda.init(); } })();`;
+            if (auto == 0) {
+                postToast("正在载入调试面板......");
+            }
+        }
+        //事件：后退按钮被点击
+        document.getElementById("backBtn").onclick = function() {
+            document.getElementById("iframe").contentWindow.history.back();
+        };
+        //事件：前进按钮被点击
+        document.getElementById("forwardBtn").onclick = function() {
+            document.getElementById("iframe").contentWindow.history.forward();
+        };
+    </script>
+</body>
+
+</html>
