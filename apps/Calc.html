@@ -1,0 +1,435 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="../mdui-v1.0.1/css/mdui.min.css">
+    <script src="../mdui-v1.0.1/js/mdui.min.js"></script>
+    <link rel="shortcut icon" href="../images/calc.png" type="image/x-icon">
+    <title>计算器</title>
+    <style>
+        .keys {
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 16px 0 48px 0;
+            transition-property: transform;
+            transition-duration: .3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #keyboard_1 {
+            z-index: 1;
+            background: #FFF3E0;
+        }
+
+        #keyboard_2 {
+            z-index: 0;
+            transform: translateY(100%);
+            background: #E0F2F1;
+        }
+
+        .key {
+            border-radius: 24px;
+            background: #FFE0B2;
+            margin: 4px;
+            text-transform: none;
+        }
+
+        #keyboard_1 .key {
+            width: 64px;
+            height: 48px;
+            background: #FFE0B2;
+        }
+
+        #keyboard_2 .key {
+            width: 84px;
+            height: 48px;
+            background: #B2DFDB;
+        }
+
+        #keyboard_1 .key:hover {
+            background: #FFCC80;
+        }
+
+        #keyboard_2 .key:hover {
+            background: #80CBC4;
+        }
+
+        #keyboard_2 .key-active {
+            background: #80CBC4;
+        }
+
+        #keyboard_2 .key-active:hover {
+            background: #4DB6AC;
+        }
+
+        #scn {
+            max-width: calc(100% - 16px);
+            height: 64px;
+            position: fixed;
+            top: 48px;
+            right: 8px;
+            font-size: 48px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow-y: scroll;
+        }
+
+        .mdui-theme-layout-dark .keys {
+            background: #434343 !important;
+        }
+
+        .topBtn {
+            position: fixed;
+            right: 8px;
+            top: 8px;
+        }
+
+        .bottomBtn {
+            position: fixed;
+            right: 8px;
+            bottom: 8px;
+        }
+
+        .mdui-dialog {
+            border-radius: 24px;
+            -webkit-box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12) !important;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+            background: #FFF3E0;
+        }
+
+        .mdui-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mdui-dialog .mdui-btn {
+            border-radius: 16px;
+        }
+
+        .mdui-theme-layout-dark .key {
+            background: #656565 !important;
+        }
+
+        .mdui-theme-layout-dark .key:hover {
+            background: #767676 !important;
+        }
+
+        .mdui-theme-layout-dark .key-active {
+            background: #767676 !important;
+        }
+
+        .mdui-theme-layout-dark .key-active:hover {
+            background: #878787 !important;
+        }
+
+        .mdui-tooltip {
+            border-radius: 8px;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #mSign {
+            position: fixed;
+            left: 8px;
+            top: 8px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-accent-deep-orange">
+    <button class="mdui-btn mdui-btn-icon mdui-ripple topBtn" mdui-tooltip="{content: '历史记录'}" mdui-dialog="{target: '#calcHistory'}" onclick="javascript:loadHistory();"><i class="mdui-icon material-icons">history</i></button>
+    <button class="mdui-btn mdui-btn-icon mdui-ripple bottomBtn" mdui-tooltip="{content: '切换键盘'}" onclick="javascript:switchKeyboard();" style="z-index: 2;"><i class="mdui-icon material-icons">keyboard</i></button>
+    <div id="scn" class="mdui-valign"></div>
+    <div class="keys" id="keyboard_1">
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:mc();">mc</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:mPlus();">m+</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:mMinus();">m-</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:mr();">mr</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:c();">C</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('/');">÷</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('*');">×</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key"><i class="mdui-icon material-icons" onclick="javascript:backspace();">backspace</i></button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">7</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">8</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">9</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">-</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">4</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">5</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">6</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">+</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">1</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">2</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">3</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:calc();">=</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">(</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">0</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">.</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add(this.innerText);">)</button>
+    </div>
+    <div class="keys" id="keyboard_2">
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('**(-1)');">1/x</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('**(2)');">x²</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('**(3)');">x³</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('**(');">xʸ</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('factorial(');">x!</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('Math.sqrt(');">√</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('**(1/');">ʸ√x</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('Math.E');">e</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" id="Inv_1">ln</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" id="Inv_2">log</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" id="Inv_3">sin</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" id="Inv_4">cos</button>
+        <br>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" id="Inv_5">tan</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:inverse();" id="invBtn">Inv</button>
+        <button class="mdui-btn mdui-btn-icon mdui-ripple key" onclick="javascript:add('Math.PI');">π</button>
+    </div>
+    <div class="mdui-dialog" id="calcHistory">
+        <div class="mdui-dialog-title">历史记录</div>
+        <div class="mdui-dialog-content">
+            <ul class="mdui-list" id="historyList"></ul>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" onclick="javascript:eraseHistory();" mdui-dialog-close>清除</button>
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+        </div>
+    </div>
+    <div id="mSign">M</div>
+    <script>
+        //接入 API：执行 JavaScript 脚本
+        function postScript(script) {
+            var scriptStr = script.toString();
+            var postData = {
+                "type": "JavaScript",
+                "script": scriptStr
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //接入 API：发送 Toast
+        function postToast(message) {
+            var postData = {
+                "type": "toast",
+                "message": message
+            };
+            window.parent.postMessage(JSON.stringify(postData), "/");
+        }
+        //获取深色主题设置
+        if (localStorage.getItem("darkTheme") == "true") {
+            document.body.classList.add("mdui-theme-layout-dark");
+            postScript(function() {
+                gebi("statusBar").style.background = "#303030";
+                gebi("statusBar").style.color = "#fff";
+            });
+        } else {
+            postScript(function() {
+                gebi("statusBar").style.background = "#fff";
+                gebi("statusBar").style.color = "#000";
+            });
+        }
+        //事件：页面加载完成
+        window.onload = function() {
+            scn = document.getElementById("scn");
+            m = 0;
+            if (localStorage.getItem("calcHistory")) {
+                calcHistory = JSON.parse(localStorage.getItem("calcHistory"));
+            } else {
+                calcHistory = [];
+            }
+            Inv_1 = document.getElementById("Inv_1");
+            Inv_2 = document.getElementById("Inv_2");
+            Inv_3 = document.getElementById("Inv_3");
+            Inv_4 = document.getElementById("Inv_4");
+            Inv_5 = document.getElementById("Inv_5");
+            inverse();
+        };
+        //函数：向屏幕中添加内容
+        function add(content) {
+            scn.innerText += content;
+            scn.scrollLeft = scn.scrollWidth;
+        }
+        //函数：输出计算结果
+        function output() {
+            try {
+                if (eval(scn.innerText) == undefined) {
+                    return "";
+                } else {
+                    return eval(scn.innerText);
+                }
+            } catch (error) {
+                postToast(String(error));
+            }
+        }
+        //函数：计算
+        function calc() {
+            if (output() != undefined && output() != scn.innerText) {
+                calcHistory.push(scn.innerText + " = " + output());
+                localStorage.setItem("calcHistory", JSON.stringify(calcHistory));
+            }
+            scn.innerText = output();
+            scn.scrollLeft = 0;
+        }
+        //函数：归零
+        function c() {
+            scn.innerText = "";
+        }
+        //函数：退格
+        function backspace() {
+            scn.innerText = scn.innerText.slice(0, scn.innerText.length - 1);
+            scn.scrollLeft = scn.scrollWidth;
+        }
+        mSign = document.getElementById("mSign");
+        //函数：M+
+        function mPlus() {
+            m += output() == "" || output() == undefined ? 0 : output();
+            output() == "" || output() == undefined ? undefined : mSign.style.display = "block";
+        }
+        //函数：M-
+        function mMinus() {
+            m -= output() == "" || output() == undefined ? 0 : output();
+            output() == "" || output() == undefined ? undefined : mSign.style.display = "block";
+        }
+        //函数：MR
+        function mr() {
+            scn.innerText = m;
+            scn.scrollLeft = 0;
+        }
+        //函数：MC
+        function mc() {
+            m = 0;
+            mSign.style.display = "none";
+        }
+        //函数：载入历史记录
+        function loadHistory() {
+            var historyList = "";
+            if (calcHistory.length == 0) {
+                document.getElementById("historyList").innerHTML = `<div class="mdui-typo-body-2 mdui-text-center">没有任何历史记录</div>`;
+            } else {
+                for (var i = 0; i < calcHistory.length; i++) {
+                    historyList += `<li class="mdui-list-item mdui-ripple" onclick="javascript:copyHandle(this.innerText);">` + calcHistory[i] + `</li>`;
+                }
+                document.getElementById("historyList").innerHTML = historyList;
+            }
+        }
+        //函数：复制文本
+        function copyHandle(content) {
+            let copy = (e) => {
+                e.preventDefault()
+                e.clipboardData.setData('text/plain', content)
+                document.removeEventListener('copy', copy)
+            }
+            document.addEventListener('copy', copy)
+            document.execCommand("Copy");
+            postToast("已复制到剪贴板");
+        }
+        //函数：清除历史记录
+        function eraseHistory() {
+            mdui.confirm('此操作将移除全部计算历史记录。', '清除历史记录？', function() {
+                calcHistory = [];
+                localStorage.setItem("calcHistory", JSON.stringify(calcHistory));
+                postToast("已清除历史记录");
+            }, undefined, {
+                "confirmText": "确认",
+                "cancelText": "取消"
+            });
+        }
+        currentKeyboard = 1;
+        //函数：切换键盘
+        function switchKeyboard() {
+            if (currentKeyboard == 1) {
+                document.getElementById("keyboard_1").style.transform = "translateY(100%)";
+                window.setTimeout(function() {
+                    document.getElementById("keyboard_2").style.transform = "translateY(0)";
+                }, 100);
+                currentKeyboard = 2;
+            } else {
+                document.getElementById("keyboard_2").style.transform = "translateY(100%)";
+                window.setTimeout(function() {
+                    document.getElementById("keyboard_1").style.transform = "translateY(0)";
+                }, 100);
+                currentKeyboard = 1;
+            }
+        }
+        Inv_status = 0;
+        //函数：切换反函数模式
+        function inverse() {
+            if (Inv_status == 0) {
+                Inv_1.innerText = "ln";
+                Inv_1.onclick = function() {
+                    add("Math.log(");
+                }
+                Inv_2.innerText = "log";
+                Inv_2.onclick = function() {
+                    add("Math.log10(");
+                }
+                Inv_3.innerText = "sin";
+                Inv_3.onclick = function() {
+                    add("Math.sin(");
+                }
+                Inv_4.innerText = "cos";
+                Inv_4.onclick = function() {
+                    add("Math.cos(");
+                }
+                Inv_5.innerText = "tan";
+                Inv_5.onclick = function() {
+                    add("Math.tan(");
+                }
+                Inv_status = 1;
+                document.getElementById("invBtn").classList.remove("key-active");
+            } else {
+                Inv_1.innerText = "eˣ";
+                Inv_1.onclick = function() {
+                    add("Math.E**(");
+                }
+                Inv_2.innerText = "10ˣ";
+                Inv_2.onclick = function() {
+                    add("10**(");
+                }
+                Inv_3.innerText = "sin⁻¹";
+                Inv_3.onclick = function() {
+                    add("Math.asin(");
+                }
+                Inv_4.innerText = "cos⁻¹";
+                Inv_4.onclick = function() {
+                    add("Math.acos(");
+                }
+                Inv_5.innerText = "tan⁻¹";
+                Inv_5.onclick = function() {
+                    add("Math.atan(");
+                }
+                Inv_status = 0;
+                document.getElementById("invBtn").classList.add("key-active");
+            }
+        }
+        //函数：阶乘
+        function factorial(x) {
+            if (x >= 0 && x % 1 == 0) {
+                var result = 1;
+                for (var i = 1; i <= x; i++) {
+                    result *= i;
+                }
+                return result;
+            } else {
+                throw String(x) + " 不是非负整数";
+            }
+        }
+    </script>
+</body>
+
+</html>
